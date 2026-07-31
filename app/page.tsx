@@ -18,7 +18,7 @@ export default function Home() {
       </div>
 
       {/* Conteúdo */}
-      <main className="relative z-10 flex flex-col items-center justify-center text-center px-6">
+      <main className="relative z-10 flex flex-col items-center justify-center text-center px-10">
         <Image
           src="/Logo.png"
           alt="Mozcyber Logo"
@@ -28,13 +28,13 @@ export default function Home() {
           priority
         />
 
-        <h1 className="text-5xl font-bold text-white tracking-widest mb-4 drop-shadow-md uppercase">
+        <h1 className="text-4xl font-bold text-white tracking-widest mb-4 drop-shadow-md uppercase">
           Mozcyber
         </h1>
 
         <div className="w-16 h-0.5 bg-white/40 mx-auto mb-6" />
 
-        <p className="text-white text-lg font-light max-w-sm leading-relaxed">
+        <p className="text-white font-light max-w-sm leading-relaxed">
           O site encontra-se actualmente em manutenção.
           <br />
           Voltamos em breve.
