@@ -27,14 +27,10 @@ export default function Home() {
           className="mb-8 drop-shadow-lg"
           priority
         />
+        <h1 className="text-6xl">mozcyber</h1>
+          <div className="w-16 h-0.5 bg-white/40 mx-auto my-6" />
 
-        <h1 className="text-4xl font-bold text-white tracking-widest mb-4 drop-shadow-md uppercase">
-          Mozcyber
-        </h1>
-
-        <div className="w-16 h-0.5 bg-white/40 mx-auto mb-6" />
-
-        <p className="text-white font-light max-w-sm leading-relaxed">
+        <p className="text-white font-light leading-relaxed">
           O site encontra-se actualmente em manutenção.
           <br />
           Voltamos em breve.
