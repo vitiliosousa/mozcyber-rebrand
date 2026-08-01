@@ -27,7 +27,7 @@ export default function Home() {
           className="mb-8 drop-shadow-lg"
           priority
         />
-        <h1 className="text-6xl">mozcyber</h1>
+        <h1 className="md:text-6xl text-3xl">mozcyber</h1>
           <div className="w-16 h-0.5 bg-white/40 mx-auto my-6" />
 
         <p className="text-white font-light leading-relaxed">
