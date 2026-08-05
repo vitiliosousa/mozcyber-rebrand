@@ -1,3 +1,5 @@
+import Footer from "@/components/Footer";
+import Header from "@/components/Header";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
@@ -20,7 +22,7 @@ const neueMetana = localFont({
 
 export const metadata: Metadata = {
   title: "Mozcyber",
-  description: "Site em manutenção",
+  description: "Comunidade de cibersegurança em Moçambique",
 };
 
 export default function RootLayout({
@@ -29,9 +31,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${neueMetana.variable} h-full antialiased`} suppressHydrationWarning>
-      <body className="min-h-full flex flex-col font-[family-name:var(--font-neue-metana)]" suppressHydrationWarning>
-        {children}
+    <html
+      lang="pt"
+      className={`${neueMetana.variable} scroll-smooth antialiased`}
+      suppressHydrationWarning
+    >
+      <body
+        className="min-h-dvh font-[family-name:var(--font-neue-metana)] text-white"
+        suppressHydrationWarning
+      >
+        <Header />
+        <main>{children}</main>
+        <Footer />
       </body>
     </html>
   );
