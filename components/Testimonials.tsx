@@ -1,29 +1,45 @@
-const testimonials = [
-  {
-    quote:
-      "Os workshops da Mozcyber deram-me bases reais de segurança web. Saí com prática, não só teoria.",
-    name: "Nélio Muchanga",
-    role: "Estudante de Informática · Maputo",
-  },
-  {
-    quote:
-      "O CTF foi intenso. Pela primeira vez senti o que é trabalhar sob pressão num cenário de ataque real.",
-    name: "Sara Macuácua",
-    role: "Participante CTF · Beira",
-  },
-  {
-    quote:
-      "A palestra de literacia digital ajudou a nossa equipa a reconhecer phishing e proteger dados dos clientes.",
-    name: "Hélder Sitoe",
-    role: "Empreendedor · Nampula",
-  },
-];
+"use client";
+
+import Reveal from "@/components/animations/Reveal";
+import { testimonials } from "@/data/testemonials";
+import { gsap, prefersReducedMotion, revealEase } from "@/lib/gsap";
+import { useRef, useState } from "react";
 
 export default function Testimonials() {
+  const [index, setIndex] = useState(0);
+  const slideRef = useRef<HTMLDivElement>(null);
+  const item = testimonials[index];
+
+  function go(direction: 1 | -1) {
+    const next =
+      (index + direction + testimonials.length) % testimonials.length;
+
+    if (prefersReducedMotion() || !slideRef.current) {
+      setIndex(next);
+      return;
+    }
+
+    const el = slideRef.current;
+    gsap.to(el, {
+      opacity: 0,
+      x: direction * 36,
+      duration: 0.28,
+      ease: "power2.in",
+      onComplete: () => {
+        setIndex(next);
+        gsap.fromTo(
+          el,
+          { opacity: 0, x: direction * -36 },
+          { opacity: 1, x: 0, duration: 0.4, ease: revealEase },
+        );
+      },
+    });
+  }
+
   return (
     <section id="testemunhos" className="bg-[#0b0f14] py-20 md:py-28">
       <div className="mx-auto max-w-7xl px-6 md:px-10">
-        <div className="max-w-2xl">
+        <Reveal className="max-w-2xl">
           <p className="text-xs font-semibold uppercase tracking-[0.35em] text-moz-teal">
             Comunidade
           </p>
@@ -35,21 +51,45 @@ export default function Testimonials() {
             Vozes de quem já participou nos workshops, CTFs e palestras da
             Mozcyber.
           </p>
-        </div>
+        </Reveal>
 
-        <ul className="mt-14 grid gap-12 md:mt-16 md:grid-cols-3 md:gap-10">
-          {testimonials.map((item) => (
-            <li key={item.name} className="flex flex-col border-t border-white/15 pt-8">
-              <blockquote className="flex-1 text-lg leading-relaxed text-white">
-                “{item.quote}”
-              </blockquote>
-              <footer className="mt-8">
-                <p className="text-moz-teal">{item.name}</p>
-                <p className="mt-1 text-sm text-moz-muted">{item.role}</p>
-              </footer>
-            </li>
-          ))}
-        </ul>
+        <div className="mt-12 border-t border-white/15 pt-10 md:mt-16 md:pt-14">
+          <div ref={slideRef} className="max-w-4xl">
+            <blockquote className="text-2xl leading-relaxed text-white md:text-4xl md:leading-snug">
+              “{item.quote}”
+            </blockquote>
+            <footer className="mt-10">
+              <p className="text-lg text-moz-teal">{item.name}</p>
+              <p className="mt-1 text-sm text-moz-muted">{item.designation}</p>
+            </footer>
+          </div>
+
+          <div className="mt-10 flex items-center justify-between gap-4">
+            <p className="text-sm text-white/40">
+              {String(index + 1).padStart(2, "0")} /{" "}
+              {String(testimonials.length).padStart(2, "0")}
+            </p>
+
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                onClick={() => go(-1)}
+                aria-label="Depoimento anterior"
+                className="flex size-11 items-center justify-center rounded-lg border border-white/20 text-white transition-colors hover:border-moz-teal hover:text-moz-teal"
+              >
+                ←
+              </button>
+              <button
+                type="button"
+                onClick={() => go(1)}
+                aria-label="Próximo depoimento"
+                className="flex size-11 items-center justify-center rounded-lg border border-white/20 text-white transition-colors hover:border-moz-teal hover:text-moz-teal"
+              >
+                →
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );

@@ -1,3 +1,6 @@
+import Reveal from "@/components/animations/Reveal";
+import RevealStagger from "@/components/animations/RevealStagger";
+
 const pillars = [
   {
     title: "Missão",
@@ -32,7 +35,7 @@ export default function MissionVisionValues() {
   return (
     <section className="bg-moz-teal py-20 text-[#0b0f14] md:py-28">
       <div className="mx-auto max-w-7xl px-6 md:px-10">
-        <div className="max-w-2xl">
+        <Reveal variant="slide" className="max-w-2xl">
           <p className="text-xs font-semibold uppercase tracking-[0.35em] text-[#0b0f14]/55">
             Direção
           </p>
@@ -44,9 +47,14 @@ export default function MissionVisionValues() {
             O que nos guia no dia a dia da comunidade — e o que esperamos de
             quem caminha connosco.
           </p>
-        </div>
+        </Reveal>
 
-        <div className="mt-14 grid gap-10 border-t border-[#0b0f14]/20 pt-12 md:mt-16 md:grid-cols-2 md:gap-16">
+        <RevealStagger
+          className="mt-14 grid gap-10 border-t border-[#0b0f14]/20 pt-12 md:mt-16 md:grid-cols-2 md:gap-16"
+          selector=":scope > div"
+          stagger={0.12}
+          variant="list"
+        >
           {pillars.map((item) => (
             <div key={item.title}>
               <h3 className="text-2xl leading-snug">{item.title}</h3>
@@ -55,23 +63,32 @@ export default function MissionVisionValues() {
               </p>
             </div>
           ))}
-        </div>
+        </RevealStagger>
 
         <div className="mt-16 md:mt-20">
-          <h3 className="text-2xl leading-snug">Valores</h3>
-          <ul className="mt-8 border-t border-[#0b0f14]/20">
-            {values.map((value) => (
-              <li
-                key={value.title}
-                className="grid gap-3 border-b border-[#0b0f14]/20 py-8 md:grid-cols-[16rem_1fr] md:items-start md:gap-12"
-              >
-                <p className="text-2xl leading-snug">{value.title}</p>
-                <p className="max-w-xl text-sm leading-relaxed text-[#0b0f14]/65">
-                  {value.text}
-                </p>
-              </li>
-            ))}
-          </ul>
+          <Reveal variant="clip">
+            <h3 className="text-2xl leading-snug">Valores</h3>
+          </Reveal>
+          <RevealStagger
+            className="mt-8 border-t border-[#0b0f14]/20"
+            selector=":scope li"
+            stagger={0.08}
+            variant="list"
+          >
+            <ul>
+              {values.map((value) => (
+                <li
+                  key={value.title}
+                  className="grid gap-3 border-b border-[#0b0f14]/20 py-8 md:grid-cols-[16rem_1fr] md:items-start md:gap-12"
+                >
+                  <p className="text-2xl leading-snug">{value.title}</p>
+                  <p className="max-w-xl text-sm leading-relaxed text-[#0b0f14]/65">
+                    {value.text}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          </RevealStagger>
         </div>
       </div>
     </section>

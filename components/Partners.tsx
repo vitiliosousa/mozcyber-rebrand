@@ -1,11 +1,7 @@
-const partners = [
-  "UEM",
-  "ISCTEM",
-  "MozDevz",
-  "ICT4D",
-  "CiTi",
-  "INAGE",
-];
+import Reveal from "@/components/animations/Reveal";
+import RevealStagger from "@/components/animations/RevealStagger";
+import { partners } from "@/data/partners";
+import Image from "next/image";
 
 export default function Partners() {
   return (
@@ -14,7 +10,7 @@ export default function Partners() {
       className="border-t border-white/10 bg-[#0b0f14] py-20 md:py-28"
     >
       <div className="mx-auto max-w-7xl px-6 md:px-10">
-        <div className="max-w-2xl">
+        <Reveal className="max-w-2xl">
           <p className="text-xs font-semibold uppercase tracking-[0.35em] text-moz-teal">
             Rede
           </p>
@@ -26,18 +22,31 @@ export default function Partners() {
             Instituições e comunidades que caminham connosco na construção de
             uma Moçambique digitalmente mais segura.
           </p>
-        </div>
+        </Reveal>
 
-        <ul className="mt-14 grid grid-cols-2 border border-white/10 sm:grid-cols-3 md:mt-16 lg:grid-cols-6">
-          {partners.map((partner) => (
-            <li
-              key={partner}
-              className="flex aspect-4/3 items-center justify-center border border-white/10 px-4 text-center text-lg text-white/45 transition-colors hover:bg-white/3 hover:text-moz-teal md:text-xl"
-            >
-              {partner}
-            </li>
-          ))}
-        </ul>
+        <RevealStagger
+          className="mt-14 md:mt-16"
+          selector=":scope li"
+          stagger={0.07}
+          variant="grid"
+        >
+          <ul className="grid grid-cols-2 border border-white/10 sm:grid-cols-3 lg:grid-cols-5">
+            {partners.map((partner) => (
+              <li
+                key={partner.name}
+                className="flex aspect-4/3 items-center justify-center border border-white/10 px-6 transition-colors hover:bg-white/3"
+              >
+                <Image
+                  src={partner.logo}
+                  alt={partner.name}
+                  width={160}
+                  height={64}
+                  className="max-h-12 w-auto object-contain opacity-70 transition-opacity hover:opacity-100 md:max-h-14"
+                />
+              </li>
+            ))}
+          </ul>
+        </RevealStagger>
       </div>
     </section>
   );

@@ -29,3 +29,28 @@ body {
     linear-gradient(90deg, rgba(46, 230, 192, 0.04) 1px, transparent 1px);
   background-size: 64px 64px;
 }
+
+.overflow-x-auto {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(46, 230, 192, 0.35) transparent;
+}
+
+.overflow-x-auto::-webkit-scrollbar {
+  height: 4px;
+}
+
+.overflow-x-auto::-webkit-scrollbar-thumb {
+  background: rgba(46, 230, 192, 0.35);
+  border-radius: 999px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

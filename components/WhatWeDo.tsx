@@ -1,3 +1,6 @@
+import Reveal from "@/components/animations/Reveal";
+import RevealStagger from "@/components/animations/RevealStagger";
+
 const activities = [
   {
     type: "Workshops",
@@ -24,7 +27,7 @@ export default function WhatWeDo() {
       className="bg-moz-teal py-20 text-[#0b0f14] md:py-28"
     >
       <div className="mx-auto max-w-7xl px-6 md:px-10">
-        <div className="max-w-2xl">
+        <Reveal variant="slide" className="max-w-2xl">
           <p className="text-xs font-semibold uppercase tracking-[0.35em] text-[#0b0f14]/55">
             Comunidade
           </p>
@@ -35,23 +38,30 @@ export default function WhatWeDo() {
             Formamos e conectamos pessoas em Moçambique através de atividades
             práticas de cibersegurança e literacia digital.
           </p>
-        </div>
+        </Reveal>
 
-        <ul className="mt-14 grid gap-px bg-[#0b0f14]/20 sm:grid-cols-2 md:mt-16">
-          {activities.map((activity) => (
-            <li
-              key={activity.type}
-              className="bg-moz-teal px-6 py-10 md:px-10 md:py-12"
-            >
-              <h3 className="text-2xl leading-snug md:text-3xl">
-                {activity.type}
-              </h3>
-              <p className="mt-4 max-w-sm text-sm leading-relaxed text-[#0b0f14]/65">
-                {activity.desc}
-              </p>
-            </li>
-          ))}
-        </ul>
+        <RevealStagger
+          className="mt-14 md:mt-16"
+          selector=":scope li"
+          stagger={0.08}
+          variant="list"
+        >
+          <ul className="grid gap-px bg-[#0b0f14]/20 sm:grid-cols-2">
+            {activities.map((activity) => (
+              <li
+                key={activity.type}
+                className="bg-moz-teal px-6 py-10 md:px-10 md:py-12"
+              >
+                <h3 className="text-2xl leading-snug md:text-3xl">
+                  {activity.type}
+                </h3>
+                <p className="mt-4 max-w-sm text-sm leading-relaxed text-[#0b0f14]/65">
+                  {activity.desc}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </RevealStagger>
       </div>
     </section>
   );

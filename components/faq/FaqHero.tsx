@@ -3,27 +3,27 @@
 import { useRef } from "react";
 import { usePageHeroAnimation } from "@/components/animations/usePageHeroAnimation";
 
-export default function EventsHero() {
+export default function FaqHero() {
   const sectionRef = useRef<HTMLElement>(null);
   usePageHeroAnimation(sectionRef);
 
   return (
     <section
       ref={sectionRef}
-      className="bg-[#0b0f14] pt-28 pb-16 md:pt-36 md:pb-20"
+      className="bg-[#0b0f14] pt-28 pb-12 md:pt-36 md:pb-16"
     >
       <div className="mx-auto max-w-7xl px-6 md:px-10">
         <p
           data-page="eyebrow"
           className="text-xs font-semibold uppercase tracking-[0.35em] text-moz-teal"
         >
-          Agenda
+          Questões
         </p>
 
         <h1 className="mt-4 max-w-4xl text-4xl leading-[1.15] md:text-6xl lg:text-7xl">
           <span className="block overflow-hidden">
             <span data-page="line-inner" className="block">
-              Eventos da
+              Perguntas
             </span>
           </span>
           <span className="block overflow-hidden">
@@ -31,7 +31,7 @@ export default function EventsHero() {
               data-page="accent"
               className="inline-block font-black text-moz-teal"
             >
-              comunidade
+              frequentes
             </span>
           </span>
         </h1>
@@ -46,8 +46,8 @@ export default function EventsHero() {
           data-page="desc"
           className="mt-6 max-w-2xl text-base leading-relaxed text-moz-muted md:mt-8 md:text-xl"
         >
-          Workshops, hackathons, CTFs e palestras de literacia digital. Aprende,
-          compete e conecta-te com a comunidade de cibersegurança em Moçambique.
+          Respostas rápidas sobre a comunidade, eventos e como participar na
+          Mozcyber.
         </p>
       </div>
     </section>

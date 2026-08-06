@@ -2,7 +2,9 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useGSAP } from "@gsap/react";
+import { gsap, prefersReducedMotion, revealEase } from "@/lib/gsap";
 
 const navLinks = [
   { label: "Início", href: "/" },
@@ -13,6 +15,8 @@ const navLinks = [
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
+  const [open, setOpen] = useState(false);
+  const mobileNavRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -21,26 +25,68 @@ export default function Header() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  useEffect(() => {
+    document.body.style.overflow = open ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open]);
+
+  useGSAP(
+    () => {
+      const nav = mobileNavRef.current;
+      if (!nav || prefersReducedMotion()) return;
+
+      if (open) {
+        gsap.fromTo(
+          nav,
+          { clipPath: "inset(0 0 100% 0)", opacity: 0.6 },
+          {
+            clipPath: "inset(0 0 0% 0)",
+            opacity: 1,
+            duration: 0.45,
+            ease: revealEase,
+          },
+        );
+        gsap.fromTo(
+          nav.querySelectorAll("[data-mobile-link]"),
+          { opacity: 0, y: 18 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.4,
+            stagger: 0.06,
+            delay: 0.12,
+            ease: revealEase,
+          },
+        );
+      }
+    },
+    { dependencies: [open] },
+  );
+
   return (
     <div
       className={`fixed inset-x-0 top-0 z-50 transition-[background-color,backdrop-filter,border-color] duration-300 ${
-        scrolled ? "bg-[#0b0f14]/20 backdrop-blur-lg" : "bg-transparent"
+        scrolled || open
+          ? "border-b border-white/10 bg-[#0b0f14]/80 backdrop-blur-md"
+          : "border-b border-transparent bg-transparent"
       }`}
     >
       <header className="mx-auto flex w-full max-w-7xl items-center justify-between px-6 py-4 md:px-10">
-        <Link href="/" className="shrink-0">
+        <Link href="/" className="shrink-0" onClick={() => setOpen(false)}>
           <Image
             src="/Logo.png"
             alt="Mozcyber"
             width={56}
             height={56}
-            className="size-12 md:size-14"
+            className="size-11 md:size-14"
             priority
           />
         </Link>
 
-        <nav className="hidden lg:block" aria-label="Navegação principal">
-          <ul className="flex items-center gap-8 text-sm tracking-wide text-white/80">
+        <nav className="hidden md:block" aria-label="Navegação principal">
+          <ul className="flex items-center gap-6 text-sm tracking-wide text-white/80 lg:gap-8">
             {navLinks.map(({ label, href }) => (
               <li key={href}>
                 <Link
@@ -54,13 +100,75 @@ export default function Header() {
           </ul>
         </nav>
 
-        <Link
-          href="#entrar"
-          className="rounded-lg bg-white px-5 py-2 text-sm font-semibold text-black transition-colors hover:bg-moz-teal"
-        >
-          Entrar
-        </Link>
+        <div className="flex items-center gap-3">
+          <Link
+            href="#entrar"
+            className="hidden rounded-lg bg-white px-5 py-2 text-sm font-semibold text-black transition-colors hover:bg-moz-teal sm:inline-flex"
+          >
+            Entrar
+          </Link>
+
+          <button
+            type="button"
+            className="flex size-10 items-center justify-center rounded-lg border border-white/20 text-white md:hidden"
+            aria-expanded={open}
+            aria-controls="mobile-nav"
+            aria-label={open ? "Fechar menu" : "Abrir menu"}
+            onClick={() => setOpen((v) => !v)}
+          >
+            <span className="sr-only">Menu</span>
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              aria-hidden
+            >
+              {open ? (
+                <path d="M6 6l12 12M18 6L6 18" />
+              ) : (
+                <path d="M4 7h16M4 12h16M4 17h16" />
+              )}
+            </svg>
+          </button>
+        </div>
       </header>
+
+      {open && (
+        <nav
+          ref={mobileNavRef}
+          id="mobile-nav"
+          className="border-t border-white/10 bg-[#0b0f14]/95 px-6 py-6 backdrop-blur-md md:hidden"
+          aria-label="Navegação mobile"
+        >
+          <ul className="space-y-1">
+            {navLinks.map(({ label, href }) => (
+              <li key={href}>
+                <Link
+                  data-mobile-link
+                  href={href}
+                  className="block rounded-lg px-3 py-3 text-base text-white/85 transition-colors hover:bg-white/5 hover:text-moz-teal"
+                  onClick={() => setOpen(false)}
+                >
+                  {label}
+                </Link>
+              </li>
+            ))}
+            <li className="pt-2">
+              <Link
+                data-mobile-link
+                href="#entrar"
+                className="block rounded-lg bg-moz-teal px-3 py-3 text-center text-sm font-semibold text-[#0b0f14]"
+                onClick={() => setOpen(false)}
+              >
+                Entrar
+              </Link>
+            </li>
+          </ul>
+        </nav>
+      )}
     </div>
   );
 }

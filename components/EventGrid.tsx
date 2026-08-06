@@ -18,7 +18,10 @@ export default function EventGrid({
       {events.map((event) => (
         <li key={event.title}>
           <Link href={href} className="group block">
-            <div className="relative aspect-[16/10] overflow-hidden bg-white/5">
+            <div
+              data-reveal="media"
+              className="relative aspect-[16/10] overflow-hidden bg-white/5"
+            >
               <Image
                 src={event.image}
                 alt={event.alt}
@@ -28,23 +31,25 @@ export default function EventGrid({
               />
             </div>
 
-            <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs sm:text-sm">
-              <span className="font-semibold uppercase tracking-[0.2em] text-moz-teal">
-                {event.type}
-              </span>
-              <time className="text-moz-muted">{event.date}</time>
-            </div>
+            <div data-reveal="body" className="mt-4">
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs sm:text-sm">
+                <span className="font-semibold uppercase tracking-[0.2em] text-moz-teal">
+                  {event.type}
+                </span>
+                <time className="text-moz-muted">{event.date}</time>
+              </div>
 
-            <h3 className="mt-2 text-lg leading-snug transition-colors group-hover:text-moz-teal md:text-xl">
-              {event.title}
-            </h3>
-            <p className="mt-1 text-sm text-moz-muted">{event.place}</p>
-            <p className="mt-3 text-sm leading-relaxed text-white/55">
-              {event.desc}
-            </p>
-            <span className="mt-4 inline-block text-sm text-white/40 transition-colors group-hover:text-moz-teal">
-              {actionLabel}
-            </span>
+              <h3 className="mt-2 text-lg leading-snug transition-colors group-hover:text-moz-teal md:text-xl">
+                {event.title}
+              </h3>
+              <p className="mt-1 text-sm text-moz-muted">{event.place}</p>
+              <p className="mt-3 text-sm leading-relaxed text-white/55">
+                {event.desc}
+              </p>
+              <span className="mt-4 inline-block text-sm text-white/40 transition-colors group-hover:text-moz-teal">
+                {actionLabel}
+              </span>
+            </div>
           </Link>
         </li>
       ))}

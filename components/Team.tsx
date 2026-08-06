@@ -1,3 +1,5 @@
+import Reveal from "@/components/animations/Reveal";
+import RevealStagger from "@/components/animations/RevealStagger";
 import Image from "next/image";
 
 const team = [
@@ -47,7 +49,7 @@ export default function Team() {
   return (
     <section id="equipa" className="border-t border-white/10 bg-[#101820] py-20">
       <div className="mx-auto max-w-7xl px-6 md:px-10">
-        <div className="max-w-2xl">
+        <Reveal className="max-w-2xl">
           <p className="text-xs font-semibold uppercase tracking-[0.35em] text-moz-teal">
             Pessoas
           </p>
@@ -59,29 +61,36 @@ export default function Team() {
             Quem organiza, forma e mantém a comunidade Mozcyber a crescer em
             Moçambique.
           </p>
-        </div>
+        </Reveal>
 
-        <ul className="mt-12 grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 md:mt-14 md:gap-x-6 md:gap-y-10 lg:grid-cols-4">
-          {team.map((member) => (
-            <li key={member.name} className="group">
-              <div className="relative aspect-square overflow-hidden bg-white/5">
-                <Image
-                  src={member.image}
-                  alt={member.name}
-                  fill
-                  sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                  className="object-cover transition-transform duration-500 group-hover:scale-105"
-                />
-              </div>
-              <h3 className="mt-3 text-base leading-snug md:text-lg">
-                {member.name}
-              </h3>
-              <p className="mt-1 text-xs text-moz-teal md:text-sm">
-                {member.role}
-              </p>
-            </li>
-          ))}
-        </ul>
+        <RevealStagger
+          className="mt-12 md:mt-14"
+          selector=":scope li"
+          stagger={0.06}
+          variant="grid"
+        >
+          <ul className="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 md:gap-x-6 md:gap-y-10 lg:grid-cols-4">
+            {team.map((member) => (
+              <li key={member.name} className="group">
+                <div className="relative aspect-square overflow-hidden bg-white/5">
+                  <Image
+                    src={member.image}
+                    alt={member.name}
+                    fill
+                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                </div>
+                <h3 className="mt-3 text-base leading-snug md:text-lg">
+                  {member.name}
+                </h3>
+                <p className="mt-1 text-xs text-moz-teal md:text-sm">
+                  {member.role}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </RevealStagger>
       </div>
     </section>
   );
