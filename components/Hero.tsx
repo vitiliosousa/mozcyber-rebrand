@@ -20,12 +20,7 @@ export default function Hero() {
         <div className="hero-grid absolute inset-0 opacity-60" />
         <div className="absolute inset-0 bg-linear-to-b from-transparent via-transparent to-[#0b0f14]" />
       </div>
-
       <div className="mx-auto flex w-full max-w-7xl flex-col items-center">
-        <p className="mb-5 text-xs font-semibold uppercase tracking-[0.35em] text-moz-teal md:mb-6">
-          Mozcyber
-        </p>
-
         <h1 className="max-w-4xl text-4xl leading-[1.15] md:text-6xl lg:text-7xl">
           Segurança{" "}
           <span className="font-black text-moz-teal">Digital</span>
@@ -40,13 +35,13 @@ export default function Hero() {
 
         <div className="mt-8 flex flex-col gap-4 sm:mt-10 sm:flex-row sm:gap-5">
           <Link
-            href="#eventos"
+            href="/eventos"
             className="rounded-lg bg-moz-teal px-8 py-3 text-sm font-semibold text-[#0b0f14] transition-colors hover:bg-white"
           >
             Ver eventos
           </Link>
           <Link
-            href="#fazemos"
+            href="/sobre"
             className="rounded-lg border border-white/25 px-8 py-3 text-sm font-semibold text-white transition-colors hover:border-moz-teal hover:text-moz-teal"
           >
             Saiba mais

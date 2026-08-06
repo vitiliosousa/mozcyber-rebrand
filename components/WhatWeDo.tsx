@@ -37,20 +37,18 @@ export default function WhatWeDo() {
           </p>
         </div>
 
-        <ul className="mt-14 space-y-0 border-t border-[#0b0f14]/20 md:mt-16">
+        <ul className="mt-14 grid gap-px bg-[#0b0f14]/20 sm:grid-cols-2 md:mt-16">
           {activities.map((activity) => (
             <li
               key={activity.type}
-              className="border-b border-[#0b0f14]/20 py-8"
+              className="bg-moz-teal px-6 py-10 md:px-10 md:py-12"
             >
-              <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between md:gap-12">
-                <h3 className="shrink-0 text-2xl leading-snug md:w-64">
-                  {activity.type}
-                </h3>
-                <p className="max-w-xl text-sm leading-relaxed text-[#0b0f14]/65">
-                  {activity.desc}
-                </p>
-              </div>
+              <h3 className="text-2xl leading-snug md:text-3xl">
+                {activity.type}
+              </h3>
+              <p className="mt-4 max-w-sm text-sm leading-relaxed text-[#0b0f14]/65">
+                {activity.desc}
+              </p>
             </li>
           ))}
         </ul>

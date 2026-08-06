@@ -2,16 +2,15 @@ import Image from "next/image";
 import Link from "next/link";
 
 const navLinks = [
-  { label: "Início", href: "#inicio" },
-  { label: "Eventos", href: "#eventos" },
-  { label: "O que fazemos", href: "#fazemos" },
-  { label: "Equipa", href: "#equipa" },
-  { label: "Parceiros", href: "#parceiros" },
+  { label: "Início", href: "/" },
+  { label: "Eventos", href: "/eventos" },
+  { label: "O que fazemos", href: "/#fazemos" },
+  { label: "Equipa", href: "/#equipa" },
+  { label: "Parceiros", href: "/#parceiros" },
 ];
 
 const pageLinks = [
   { label: "Sobre", href: "/sobre" },
-  { label: "Blog", href: "/blog" },
   { label: "Contacto", href: "/contacto" },
 ];
 
