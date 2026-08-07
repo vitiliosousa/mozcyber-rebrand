@@ -19,8 +19,15 @@ const neueMetana = localFont({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(
+    (
+      process.env.AUTH_URL ||
+      process.env.NEXT_PUBLIC_SITE_URL ||
+      "http://localhost:3000"
+    ).replace(/\/$/, ""),
+  ),
   title: "Mozcyber",
-  description: "Site em manutenção",
+  description: "Comunidade de cibersegurança em Moçambique",
 };
 
 export default function RootLayout({
@@ -29,8 +36,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${neueMetana.variable} h-full antialiased`} suppressHydrationWarning>
-      <body className="min-h-full flex flex-col font-[family-name:var(--font-neue-metana)]" suppressHydrationWarning>
+    <html
+      lang="pt"
+      className={`${neueMetana.variable} scroll-smooth antialiased`}
+      suppressHydrationWarning
+    >
+      <body
+        className="min-h-dvh font-[family-name:var(--font-neue-metana)] text-white"
+        suppressHydrationWarning
+      >
         {children}
       </body>
     </html>

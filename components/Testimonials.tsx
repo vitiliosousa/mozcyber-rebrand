@@ -1,0 +1,107 @@
+"use client";
+
+import Reveal from "@/components/animations/Reveal";
+import { testimonials } from "@/data/testemonials";
+import { gsap, prefersReducedMotion, revealEase } from "@/lib/gsap";
+import { useEffect, useRef, useState } from "react";
+
+const AUTO_MS = 5000;
+
+export default function Testimonials() {
+  const [index, setIndex] = useState(0);
+  const slideRef = useRef<HTMLDivElement>(null);
+  const item = testimonials[index];
+
+  function go(direction: 1 | -1) {
+    const next =
+      (index + direction + testimonials.length) % testimonials.length;
+
+    if (prefersReducedMotion() || !slideRef.current) {
+      setIndex(next);
+      return;
+    }
+
+    const el = slideRef.current;
+    gsap.to(el, {
+      opacity: 0,
+      x: direction * 36,
+      duration: 0.28,
+      ease: "power2.in",
+      onComplete: () => {
+        setIndex(next);
+        gsap.fromTo(
+          el,
+          { opacity: 0, x: direction * -36 },
+          { opacity: 1, x: 0, duration: 0.4, ease: revealEase },
+        );
+      },
+    });
+  }
+
+  useEffect(() => {
+    if (prefersReducedMotion() || testimonials.length < 2) return;
+    const id = setInterval(() => go(1), AUTO_MS);
+    return () => clearInterval(id);
+  }, [index]);
+
+  return (
+    <section
+      id="testemunhos"
+      className="flex min-h-dvh flex-col justify-center bg-[#0b0f14] py-12 md:min-h-screen md:py-0"
+    >
+      <div className="mx-auto w-full max-w-7xl px-6 md:px-10">
+        <Reveal className="max-w-2xl">
+          <p className="text-xs font-semibold uppercase tracking-[0.35em] text-moz-teal">
+            Comunidade
+          </p>
+          <h2 className="mt-2 text-2xl leading-tight md:text-4xl">
+            O que dizem{" "}
+            <span className="font-black text-moz-teal">sobre nós</span>
+          </h2>
+          <p className="mt-3 text-sm leading-relaxed text-moz-muted">
+            Vozes de quem já participou nos workshops, CTFs e palestras da
+            Mozcyber.
+          </p>
+        </Reveal>
+
+        <div className="mt-8 border-t border-white/15 pt-8 md:mt-10 md:pt-10">
+          <div ref={slideRef} className="max-w-4xl">
+            <blockquote className="text-xl leading-relaxed text-white md:text-2xl md:leading-snug">
+              “{item.quote}”
+            </blockquote>
+            <footer className="mt-6 md:mt-8">
+              <p className="text-base text-moz-teal">{item.name}</p>
+              <p className="mt-0.5 text-sm text-moz-muted">{item.designation}</p>
+            </footer>
+          </div>
+
+          <div className="mt-8 flex items-center justify-between gap-4">
+            <p className="text-sm text-white/40">
+              {String(index + 1).padStart(2, "0")} /{" "}
+              {String(testimonials.length).padStart(2, "0")}
+            </p>
+
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => go(-1)}
+                aria-label="Depoimento anterior"
+                className="flex size-9 items-center justify-center rounded-lg border border-white/20 text-white transition-colors hover:border-moz-teal hover:text-moz-teal"
+              >
+                ←
+              </button>
+              <button
+                type="button"
+                onClick={() => go(1)}
+                aria-label="Próximo depoimento"
+                className="flex size-9 items-center justify-center rounded-lg border border-white/20 text-white transition-colors hover:border-moz-teal hover:text-moz-teal"
+              >
+                →
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}

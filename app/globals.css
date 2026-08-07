@@ -1,21 +1,20 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #0b0f14;
+  --foreground: #f0f2f5;
+  --moz-teal: #2ee6c0;
+  --moz-teal-dim: #1a9e84;
+  --moz-muted: rgba(255, 255, 255, 0.68);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-moz-teal: var(--moz-teal);
+  --color-moz-teal-dim: var(--moz-teal-dim);
+  --color-moz-muted: var(--moz-muted);
   --font-sans: var(--font-neue-metana);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
 }
 
 body {
@@ -23,3 +22,210 @@ body {
   color: var(--foreground);
   font-family: var(--font-neue-metana), sans-serif;
 }
+
+.hero-grid {
+  background-image:
+    linear-gradient(rgba(46, 230, 192, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(46, 230, 192, 0.04) 1px, transparent 1px);
+  background-size: 64px 64px;
+}
+
+.overflow-x-auto {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(46, 230, 192, 0.35) transparent;
+}
+
+.overflow-x-auto::-webkit-scrollbar {
+  height: 4px;
+}
+
+.overflow-x-auto::-webkit-scrollbar-thumb {
+  background: rgba(46, 230, 192, 0.35);
+  border-radius: 999px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.blog-editor p.is-editor-empty:first-child::before {
+  color: rgba(255, 255, 255, 0.35);
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
+.blog-editor--paper p.is-editor-empty:first-child::before {
+  color: rgba(255, 255, 255, 0.28);
+}
+
+.writing-desk {
+  min-height: calc(100dvh - 6rem);
+}
+
+.writing-sheet {
+  background: #101820;
+  color: #f0f2f5;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+  padding: 2rem 1.5rem 3rem;
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.35);
+}
+
+@media (min-width: 768px) {
+  .writing-sheet {
+    padding: 3rem 3.25rem 4rem;
+  }
+}
+
+.tippy-box[data-theme~="slash"] {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+.tippy-box[data-theme~="slash"] .tippy-content {
+  padding: 0;
+}
+
+.tippy-box,
+[data-tippy-root] {
+  z-index: 50;
+}
+
+.blog-editor ul {
+  list-style: disc;
+  padding-left: 1.5rem;
+  margin: 0.75rem 0;
+}
+
+.blog-editor ol {
+  list-style: decimal;
+  padding-left: 1.5rem;
+  margin: 0.75rem 0;
+}
+
+.blog-editor li {
+  margin: 0.25rem 0;
+}
+
+.blog-editor h2 {
+  font-size: 1.5rem;
+  margin: 1.25rem 0 0.5rem;
+  color: #fff;
+}
+
+.blog-editor--paper h2 {
+  color: #fff;
+  font-size: 1.65rem;
+  margin: 1.75rem 0 0.65rem;
+}
+
+.blog-editor h3 {
+  font-size: 1.2rem;
+  margin: 1rem 0 0.4rem;
+  color: #fff;
+}
+
+.blog-editor--paper h3 {
+  color: #fff;
+  font-size: 1.3rem;
+  margin: 1.35rem 0 0.5rem;
+}
+
+.blog-editor blockquote {
+  border-left: 3px solid var(--moz-teal);
+  margin: 1rem 0;
+  padding-left: 1rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.blog-editor--paper blockquote {
+  color: rgba(255, 255, 255, 0.65);
+  border-left-color: var(--moz-teal);
+}
+
+.blog-editor img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 1rem 0;
+  border-radius: 0.5rem;
+}
+
+.blog-editor--paper a {
+  color: var(--moz-teal);
+}
+
+
+.blog-article-content ul {
+  list-style: disc;
+  padding-left: 1.5rem;
+  margin: 1rem 0;
+}
+
+.blog-article-content ol {
+  list-style: decimal;
+  padding-left: 1.5rem;
+  margin: 1rem 0;
+}
+
+.blog-article-content li {
+  margin: 0.35rem 0;
+}
+
+.blog-article-content img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 1.5rem 0;
+  border-radius: 0.5rem;
+}
+
+.blog-article-content h2 {
+  margin-top: 2rem;
+  font-size: 1.75rem;
+  color: #fff;
+}
+
+.blog-article-content h3 {
+  margin-top: 1.5rem;
+  font-size: 1.35rem;
+  color: #fff;
+}
+
+.blog-article-content blockquote {
+  border-left: 3px solid var(--moz-teal);
+  margin: 1.25rem 0;
+  padding-left: 1rem;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.blog-article-content p {
+  margin-bottom: 1rem;
+}
+
+.blog-article-content a {
+  color: var(--moz-teal);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.blog-editor a {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  color: var(--moz-teal);
+}
+
+.blog-article-content a:hover {
+  color: #fff;
+}
+
