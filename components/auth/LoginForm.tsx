@@ -24,9 +24,10 @@ export default function LoginForm() {
         <p className="text-xs font-semibold uppercase tracking-[0.35em] text-moz-teal">
           Conta
         </p>
-        <h1 className="mt-3 text-3xl md:text-4xl">Entrar</h1>
+        <h1 className="mt-3 text-3xl md:text-4xl">Espaço de autores</h1>
         <p className="mt-3 text-sm text-moz-muted">
-          Acede ao painel para escrever e gerir artigos.
+          Entras no painel editorial da Mozcyber para escrever, editar e enviar
+          artigos para revisão. Não é a área pública do site.
         </p>
       </div>
 

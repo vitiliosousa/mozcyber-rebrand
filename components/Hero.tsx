@@ -103,14 +103,18 @@ export default function Hero() {
       </div>
 
       <div className="mx-auto flex w-full max-w-7xl flex-col items-center">
-        <h1 className="max-w-4xl text-4xl leading-[1.15] md:text-6xl lg:text-7xl">
+        <h1 className="max-w-4xl text-3xl leading-[1.15] md:text-5xl lg:text-6xl">
           <span data-hero="line" className="block overflow-hidden">
             <span data-hero="line-inner" className="block">
-              Segurança{" "}
-              <span
-                data-hero="accent"
-                className="inline-block font-black text-moz-teal"
-              >
+              Segurança
+            </span>
+          </span>
+          <span data-hero="line" className="block overflow-hidden">
+            <span
+              data-hero="line-inner"
+              className="block font-black text-moz-teal"
+            >
+              <span data-hero="accent" className="inline-block">
                 Digital
               </span>
             </span>
@@ -124,32 +128,34 @@ export default function Hero() {
 
         <div
           data-hero="rule"
-          className="mt-6 h-px w-16 bg-moz-teal md:mt-8"
+          className="mt-5 h-px w-14 bg-moz-teal md:mt-6"
           aria-hidden
         />
 
         <p
           data-hero="desc"
-          className="mt-6 max-w-2xl text-base leading-relaxed text-moz-muted md:mt-8"
+          className="mt-5 max-w-2xl text-sm leading-relaxed text-moz-muted md:mt-6 md:text-base"
         >
           Comunidade dedicada à proteção de dados, formação em cibersegurança e
           construção de uma cultura digital mais segura em Moçambique.
         </p>
 
-        <div className="mt-8 flex flex-col gap-4 sm:mt-10 sm:flex-row sm:gap-5">
-          <Link
+        <div className="mt-7 flex flex-col gap-3 sm:mt-8 sm:flex-row sm:gap-4">
+          <a
             data-hero="cta"
-            href="/eventos"
-            className="rounded-lg bg-moz-teal px-8 py-3 text-sm font-semibold text-[#0b0f14] transition-colors hover:bg-white"
+            href="https://linktr.ee/mozcyber?utm_source=linktree_profile_share&ltsid=30a4afa0-726d-4922-a0e1-66554b59c148"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="rounded-lg bg-moz-teal px-6 py-2.5 text-sm font-semibold text-[#0b0f14] transition-colors hover:bg-white"
           >
-            Ver eventos
-          </Link>
+            Entrar na comunidade
+          </a>
           <Link
             data-hero="cta"
             href="/sobre"
-            className="rounded-lg border border-white/25 px-8 py-3 text-sm font-semibold text-white transition-colors hover:border-moz-teal hover:text-moz-teal"
+            className="rounded-lg border border-white/25 px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:border-moz-teal hover:text-moz-teal"
           >
-            Saiba mais
+            Saber mais
           </Link>
         </div>
       </div>

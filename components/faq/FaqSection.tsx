@@ -4,7 +4,7 @@ import { faqs } from "@/data/faqs";
 
 export default function FaqSection() {
   return (
-    <section className="bg-[#0b0f14] pb-20 md:pb-28">
+    <section className="bg-[#0b0f14] pb-12 md:pb-16">
       <div className="mx-auto max-w-7xl px-6 md:px-10">
         <RevealStagger
           className="border-t border-white/10"

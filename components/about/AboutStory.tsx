@@ -21,13 +21,13 @@ const moments = [
 
 export default function AboutStory() {
   return (
-    <section className="border-t border-white/10 bg-[#101820] py-20 md:py-28">
+    <section className="border-t border-white/10 bg-[#101820] py-12 md:py-16">
       <div className="mx-auto max-w-7xl px-6 md:px-10">
-        <div className="grid items-center gap-10 md:grid-cols-2 md:gap-16">
+        <div className="grid items-center gap-8 md:grid-cols-2 md:gap-12">
           <Reveal variant="clip">
             <div
               data-reveal="media"
-              className="relative aspect-4/5 overflow-hidden bg-white/5 md:aspect-3/4"
+              className="relative aspect-[4/5] max-h-[28rem] overflow-hidden bg-white/5 md:aspect-[3/4]"
             >
               <Image
                 src="/about/5.jpg"
@@ -44,18 +44,18 @@ export default function AboutStory() {
               <p className="text-xs font-semibold uppercase tracking-[0.35em] text-moz-teal">
                 Percurso
               </p>
-              <h2 className="mt-4 text-3xl leading-tight md:text-5xl">
+              <h2 className="mt-2 text-2xl leading-tight md:text-4xl">
                 A nossa{" "}
                 <span className="font-black text-moz-teal">história</span>
               </h2>
-              <p className="mt-5 text-base leading-relaxed text-moz-muted">
+              <p className="mt-3 text-sm leading-relaxed text-moz-muted">
                 De um grupo pequeno a uma comunidade que forma, compete e
                 partilha conhecimento em Moçambique.
               </p>
             </Reveal>
 
             <RevealStagger
-              className="mt-10 border-t border-white/10"
+              className="mt-6 border-t border-white/10"
               selector=":scope li"
               stagger={0.1}
               variant="list"
@@ -64,12 +64,12 @@ export default function AboutStory() {
                 {moments.map((moment) => (
                   <li
                     key={moment.title}
-                    className="border-b border-white/10 py-6"
+                    className="border-b border-white/10 py-4"
                   >
-                    <h3 className="text-xl leading-snug md:text-2xl">
+                    <h3 className="text-lg leading-snug md:text-xl">
                       {moment.title}
                     </h3>
-                    <p className="mt-3 text-sm leading-relaxed text-white/55">
+                    <p className="mt-2 text-sm leading-relaxed text-white/55">
                       {moment.text}
                     </p>
                   </li>

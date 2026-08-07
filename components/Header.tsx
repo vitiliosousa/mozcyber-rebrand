@@ -14,6 +14,9 @@ const navLinks = [
   { label: "Contacto", href: "/contacto" },
 ];
 
+const LINKTREE_URL =
+  "https://linktr.ee/mozcyber?utm_source=linktree_profile_share&ltsid=30a4afa0-726d-4922-a0e1-66554b59c148";
+
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
@@ -74,20 +77,20 @@ export default function Header() {
           : "border-b border-transparent bg-transparent"
       }`}
     >
-      <header className="mx-auto flex w-full max-w-7xl items-center justify-between px-6 py-4 md:px-10">
+      <header className="mx-auto flex w-full max-w-7xl items-center justify-between px-6 py-2.5 md:px-10">
         <Link href="/" className="shrink-0" onClick={() => setOpen(false)}>
           <Image
             src="/Logo.png"
             alt="Mozcyber"
-            width={50}
-            height={50}
-            className="size-11 md:size-14"
+            width={40}
+            height={40}
+            className="size-8 md:size-9"
             priority
           />
         </Link>
 
         <nav className="hidden md:block" aria-label="Navegação principal">
-          <ul className="flex items-center gap-6 text-sm tracking-wide text-white/80 lg:gap-8">
+          <ul className="flex items-center gap-5 text-sm tracking-wide text-white/80 lg:gap-7">
             {navLinks.map(({ label, href }) => (
               <li key={href}>
                 <Link
@@ -102,16 +105,18 @@ export default function Header() {
         </nav>
 
         <div className="flex items-center gap-3">
-          <Link
-            href="/login"
-            className="hidden rounded-lg bg-white px-5 py-2 text-sm font-semibold text-black transition-colors hover:bg-moz-teal sm:inline-flex"
+          <a
+            href={LINKTREE_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hidden rounded-lg bg-white px-4 py-1.5 text-sm font-semibold text-black transition-colors hover:bg-moz-teal sm:inline-flex"
           >
             Entrar
-          </Link>
+          </a>
 
           <button
             type="button"
-            className="flex size-10 items-center justify-center rounded-lg border border-white/20 text-white md:hidden"
+            className="flex size-9 items-center justify-center rounded-lg border border-white/20 text-white md:hidden"
             aria-expanded={open}
             aria-controls="mobile-nav"
             aria-label={open ? "Fechar menu" : "Abrir menu"}
@@ -158,14 +163,16 @@ export default function Header() {
               </li>
             ))}
             <li className="pt-2">
-              <Link
+              <a
                 data-mobile-link
-                href="/login"
+                href={LINKTREE_URL}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="block rounded-lg bg-moz-teal px-3 py-3 text-center text-sm font-semibold text-[#0b0f14]"
                 onClick={() => setOpen(false)}
               >
                 Entrar
-              </Link>
+              </a>
             </li>
           </ul>
         </nav>

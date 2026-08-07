@@ -3,10 +3,10 @@ import {
   deletePostAction,
   unpublishPostAction,
 } from "@/lib/actions";
+import AdminBlogFilters from "@/components/blog/AdminBlogFilters";
 import RejectPostForm from "@/components/blog/RejectPostForm";
 import ActionButton from "@/components/ui/ActionButton";
 import Pagination, { parsePage } from "@/components/ui/Pagination";
-import { BLOG_CATEGORIES } from "@/lib/blog";
 import { prisma } from "@/lib/prisma";
 import type { PostStatus, Prisma } from "@prisma/client";
 import Link from "next/link";
@@ -26,7 +26,6 @@ type Props = {
     page?: string;
     pendingPage?: string;
     status?: string;
-    category?: string;
     q?: string;
   }>;
 };
@@ -36,7 +35,6 @@ export default async function AdminBlogPage({ searchParams }: Props) {
   const page = parsePage(sp.page);
   const pendingPage = parsePage(sp.pendingPage);
   const status = (sp.status || "").trim() as PostStatus | "";
-  const category = (sp.category || "").trim();
   const q = (sp.q || "").trim();
 
   const pendingWhere: Prisma.PostWhereInput = {
@@ -58,7 +56,6 @@ export default async function AdminBlogPage({ searchParams }: Props) {
   const where: Prisma.PostWhereInput = {
     deletedAt: null,
     ...(status ? { status } : {}),
-    ...(category ? { category } : {}),
     ...(q
       ? {
           OR: [
@@ -83,7 +80,6 @@ export default async function AdminBlogPage({ searchParams }: Props) {
 
   const listParams = new URLSearchParams();
   if (status) listParams.set("status", status);
-  if (category) listParams.set("category", category);
   if (q) listParams.set("q", q);
   const listQs = listParams.toString();
   const listBase = listQs ? `/admin/blog?${listQs}` : "/admin/blog";
@@ -155,51 +151,9 @@ export default async function AdminBlogPage({ searchParams }: Props) {
       />
 
       <h2 className="mt-12 text-xl">Todos os artigos</h2>
-      <form
-        method="get"
-        className="mt-4 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-end"
-      >
-        <input
-          name="q"
-          defaultValue={q}
-          placeholder="Pesquisar…"
-          className="rounded-lg border border-white/15 bg-white/3 px-3 py-2 text-sm outline-none focus:border-moz-teal sm:w-48"
-        />
-        <select
-          name="status"
-          defaultValue={status}
-          className="rounded-lg border border-white/15 bg-white/3 px-3 py-2 text-sm outline-none focus:border-moz-teal"
-        >
-          <option value="" className="bg-[#0b0f14]">
-            Todos os estados
-          </option>
-          {Object.entries(statusLabel).map(([k, v]) => (
-            <option key={k} value={k} className="bg-[#0b0f14]">
-              {v}
-            </option>
-          ))}
-        </select>
-        <select
-          name="category"
-          defaultValue={category}
-          className="rounded-lg border border-white/15 bg-white/3 px-3 py-2 text-sm outline-none focus:border-moz-teal"
-        >
-          <option value="" className="bg-[#0b0f14]">
-            Todas categorias
-          </option>
-          {BLOG_CATEGORIES.map((c) => (
-            <option key={c} value={c} className="bg-[#0b0f14]">
-              {c}
-            </option>
-          ))}
-        </select>
-        <button
-          type="submit"
-          className="rounded-lg bg-moz-teal px-4 py-2 text-sm font-semibold text-[#0b0f14]"
-        >
-          Filtrar
-        </button>
-      </form>
+      <div className="mt-4">
+        <AdminBlogFilters q={q} status={status} />
+      </div>
 
       <ul className="mt-4 border-t border-white/10">
         {posts.map((post) => (
@@ -211,7 +165,7 @@ export default async function AdminBlogPage({ searchParams }: Props) {
               <p className="text-base">{post.title}</p>
               <p className="mt-1 text-sm text-white/45">
                 {statusLabel[post.status]} ·{" "}
-                {post.author.name || post.author.email} · {post.views} views
+                {post.author.name || post.author.email}
               </p>
             </div>
             <div className="flex flex-wrap items-center gap-3 text-sm">

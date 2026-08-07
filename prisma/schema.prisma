@@ -87,7 +87,6 @@ model Post {
   category        String     @default("Geral")
   status          PostStatus @default(DRAFT)
   rejectionReason String?
-  views           Int        @default(0)
   authorId        String
   author          User       @relation(fields: [authorId], references: [id], onDelete: Cascade)
   publishedAt     DateTime?

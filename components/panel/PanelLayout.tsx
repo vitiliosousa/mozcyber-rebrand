@@ -5,7 +5,6 @@ import { prisma } from "@/lib/prisma";
 const dashboardLinks = [
   { href: "/dashboard", label: "Início" },
   { href: "/dashboard/blog", label: "Os meus artigos" },
-  { href: "/dashboard/blog/new", label: "Novo artigo" },
   { href: "/dashboard/notifications", label: "Notificações" },
 ];
 
@@ -14,7 +13,6 @@ const adminLinks = [
   { href: "/admin/blog", label: "Artigos" },
   { href: "/admin/blog/trash", label: "Lixeira" },
   { href: "/admin/users", label: "Utilizadores" },
-  { href: "/admin/settings", label: "Definições" },
 ];
 
 async function signOutAction() {
@@ -51,6 +49,8 @@ export default async function PanelLayout({
       variant={variant}
       links={links}
       email={session?.user?.email}
+      name={session?.user?.name}
+      image={session?.user?.image}
       isAdmin={session?.user?.role === "ADMIN"}
       signOutAction={signOutAction}
     >

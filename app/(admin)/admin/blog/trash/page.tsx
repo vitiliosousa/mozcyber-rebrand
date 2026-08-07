@@ -2,13 +2,36 @@ import {
   permanentDeletePostAction,
   restorePostAction,
 } from "@/lib/actions";
+import PanelListFilters from "@/components/panel/PanelListFilters";
 import ActionButton from "@/components/ui/ActionButton";
 import { prisma } from "@/lib/prisma";
+import type { Prisma } from "@prisma/client";
 import Link from "next/link";
 
-export default async function AdminTrashPage() {
+type Props = {
+  searchParams: Promise<{ q?: string }>;
+};
+
+export default async function AdminTrashPage({ searchParams }: Props) {
+  const sp = await searchParams;
+  const q = (sp.q || "").trim();
+
+  const where: Prisma.PostWhereInput = {
+    deletedAt: { not: null },
+    ...(q
+      ? {
+          OR: [
+            { title: { contains: q, mode: "insensitive" } },
+            { excerpt: { contains: q, mode: "insensitive" } },
+            { author: { name: { contains: q, mode: "insensitive" } } },
+            { author: { email: { contains: q, mode: "insensitive" } } },
+          ],
+        }
+      : {}),
+  };
+
   const posts = await prisma.post.findMany({
-    where: { deletedAt: { not: null } },
+    where,
     orderBy: { deletedAt: "desc" },
     include: { author: { select: { name: true, email: true } } },
   });
@@ -26,9 +49,19 @@ export default async function AdminTrashPage() {
         Artigos apagados (soft delete). Podes restaurar ou apagar de vez.
       </p>
 
-      <ul className="mt-10 border-t border-white/10">
+      <div className="mt-6">
+        <PanelListFilters
+          basePath="/admin/blog/trash"
+          q={q}
+          searchPlaceholder="Pesquisar na lixeira…"
+        />
+      </div>
+
+      <ul className="mt-6 border-t border-white/10">
         {posts.length === 0 && (
-          <li className="py-10 text-moz-muted">Lixeira vazia.</li>
+          <li className="py-10 text-moz-muted">
+            {q ? "Nada encontrado." : "Lixeira vazia."}
+          </li>
         )}
         {posts.map((post) => (
           <li

@@ -16,8 +16,7 @@ export default function Events() {
   const event = preview[index];
 
   function go(direction: 1 | -1) {
-    const next =
-      (index + direction + preview.length) % preview.length;
+    const next = (index + direction + preview.length) % preview.length;
 
     if (prefersReducedMotion() || !slideRef.current) {
       setIndex(next);
@@ -48,26 +47,70 @@ export default function Events() {
   }, [index]);
 
   return (
-    <section id="eventos" className="bg-[#0b0f14] py-20 md:py-28">
-      <div className="mx-auto max-w-7xl px-6 md:px-10">
-        <Reveal className="max-w-2xl">
-          <p className="text-xs font-semibold uppercase tracking-[0.35em] text-moz-teal">
-            Agenda
-          </p>
-          <h2 className="mt-4 text-3xl leading-tight md:text-5xl">
-            Próximos{" "}
-            <span className="font-black text-moz-teal">eventos</span>
-          </h2>
-          <p className="mt-5 text-base leading-relaxed text-moz-muted">
-            Workshops, hackathons, CTFs e palestras de literacia digital para
-            fortalecer a comunidade de cibersegurança em Moçambique.
-          </p>
-        </Reveal>
+    <section
+      id="eventos"
+      className="flex min-h-dvh flex-col justify-center bg-[#0b0f14] py-12 md:min-h-screen md:py-0"
+    >
+      <div className="mx-auto w-full max-w-7xl px-6 md:px-10">
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <Reveal className="max-w-xl">
+            <p className="text-xs font-semibold uppercase tracking-[0.35em] text-moz-teal">
+              Agenda
+            </p>
+            <h2 className="mt-2 text-2xl leading-tight md:text-4xl">
+              Próximos{" "}
+              <span className="font-black text-moz-teal">eventos</span>
+            </h2>
+            <p className="mt-3 text-sm leading-relaxed text-moz-muted">
+              Workshops, hackathons, CTFs e palestras de literacia digital.
+            </p>
+          </Reveal>
+          <Reveal variant="fade">
+            <Link
+              href="/eventos"
+              className="inline-flex text-sm font-semibold text-moz-teal transition-colors hover:text-white"
+            >
+              Ver todos →
+            </Link>
+          </Reveal>
+        </div>
 
-        <div className="mt-12 md:mt-16">
+        {/* Desktop: 3 cards a ocupar a largura */}
+        <div className="mt-8 hidden gap-4 md:mt-10 md:grid md:grid-cols-3">
+          {preview.map((item) => (
+            <Link
+              key={item.pageUrl}
+              href={item.pageUrl}
+              className="group flex flex-col"
+            >
+              <div className="relative aspect-[16/10] overflow-hidden bg-white/5">
+                <Image
+                  src={item.image}
+                  alt={item.alt}
+                  fill
+                  sizes="(max-width: 1280px) 33vw, 400px"
+                  className="object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+              </div>
+              <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs">
+                <span className="font-semibold uppercase tracking-[0.2em] text-moz-teal">
+                  {item.type}
+                </span>
+                <time className="text-white/55">{item.date}</time>
+              </div>
+              <h3 className="mt-1.5 text-lg leading-snug transition-colors group-hover:text-moz-teal">
+                {item.title}
+              </h3>
+              <p className="mt-1 text-sm text-white/50">{item.place}</p>
+            </Link>
+          ))}
+        </div>
+
+        {/* Mobile: carrossel */}
+        <div className="mt-8 md:hidden">
           <div ref={slideRef}>
             <Link href={event.pageUrl} className="group block">
-              <div className="relative aspect-video overflow-hidden">
+              <div className="relative aspect-[16/10] overflow-hidden">
                 <Image
                   src={event.image}
                   alt={event.alt}
@@ -76,41 +119,32 @@ export default function Events() {
                   className="object-cover transition-transform duration-700 group-hover:scale-105"
                   priority
                 />
-                <div className="absolute inset-0 bg-linear-to-t from-[#0b0f14] via-[#0b0f14]/50 to-transparent" />
-
-                <div className="absolute inset-x-0 bottom-0 p-6 md:p-10">
-                  <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm">
+                <div className="absolute inset-0 bg-linear-to-t from-[#0b0f14] via-[#0b0f14]/40 to-transparent" />
+                <div className="absolute inset-x-0 bottom-0 p-4">
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs">
                     <span className="font-semibold uppercase tracking-[0.2em] text-moz-teal">
                       {event.type}
                     </span>
                     <time className="text-white/70">{event.date}</time>
                   </div>
-                  <h3 className="mt-3 max-w-3xl text-2xl leading-snug md:text-4xl">
-                    {event.title}
-                  </h3>
-                  <p className="mt-2 text-sm text-white/70 md:text-base">
-                    {event.place}
-                  </p>
-                  <p className="mt-3 hidden max-w-2xl text-sm leading-relaxed text-white/55 md:block">
-                    {event.desc}
-                  </p>
+                  <h3 className="mt-2 text-xl leading-snug">{event.title}</h3>
+                  <p className="mt-1 text-sm text-white/70">{event.place}</p>
                 </div>
               </div>
             </Link>
           </div>
 
-          <div className="mt-6 flex items-center justify-between gap-4">
+          <div className="mt-4 flex items-center justify-between gap-4">
             <p className="text-sm text-white/40">
               {String(index + 1).padStart(2, "0")} /{" "}
               {String(preview.length).padStart(2, "0")}
             </p>
-
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
               <button
                 type="button"
                 onClick={() => go(-1)}
                 aria-label="Evento anterior"
-                className="flex size-11 items-center justify-center rounded-lg border border-white/20 text-white transition-colors hover:border-moz-teal hover:text-moz-teal"
+                className="flex size-9 items-center justify-center rounded-lg border border-white/20 text-white transition-colors hover:border-moz-teal hover:text-moz-teal"
               >
                 ←
               </button>
@@ -118,22 +152,13 @@ export default function Events() {
                 type="button"
                 onClick={() => go(1)}
                 aria-label="Próximo evento"
-                className="flex size-11 items-center justify-center rounded-lg border border-white/20 text-white transition-colors hover:border-moz-teal hover:text-moz-teal"
+                className="flex size-9 items-center justify-center rounded-lg border border-white/20 text-white transition-colors hover:border-moz-teal hover:text-moz-teal"
               >
                 →
               </button>
             </div>
           </div>
         </div>
-
-        <Reveal className="mt-10" variant="fade">
-          <Link
-            href="/eventos"
-            className="inline-flex text-sm font-semibold text-moz-teal transition-colors hover:text-white"
-          >
-            Ver todos os eventos →
-          </Link>
-        </Reveal>
       </div>
     </section>
   );

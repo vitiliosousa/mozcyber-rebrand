@@ -13,7 +13,7 @@ export default function EventsUpcoming() {
   const pageEvents = events.slice(page * PER_PAGE, (page + 1) * PER_PAGE);
 
   return (
-    <section id="proximos" className="bg-[#0b0f14] pb-20 md:pb-28">
+    <section id="proximos" className="bg-[#0b0f14] pb-12 md:pb-16">
       <div className="mx-auto max-w-7xl px-6 md:px-10">
         <RevealStagger
           key={page}

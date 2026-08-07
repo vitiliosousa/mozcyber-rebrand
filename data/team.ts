@@ -18,22 +18,22 @@ export const members: TeamMember[] = [
   {
     name: "Michelle Chuva",
     description: "Marketing Manager",
-    image: "/speakers/michelle_new.jpeg",
+    image: "/speakers/michelle_new.png",
   },
   {
     name: "Denzel Mhula",
     description: "Finance Manager",
-    image: "/speakers/denzel.jpeg",
+    image: "/speakers/denzel.png",
   },
   {
     name: "Muthimbane Langa",
     description: "Community Manager",
-    image: "/speakers/muthimbane_new.jpeg",
+    image: "/speakers/muthimbane_new.png",
   },
   {
     name: "Elton Nhaca",
     description: "Community Manager",
-    image: "/speakers/elton_new.jpeg",
+    image: "/speakers/elton_new.png",
   },
   {
     name: "Patricio Massinga",
@@ -48,11 +48,11 @@ export const members: TeamMember[] = [
   {
     name: "Vitilio Sousa",
     description: "Technology Manager",
-    image: "/speakers/vitilio.jpeg",
+    image: "/speakers/vitilio.png",
   },
   {
     name: "Chantel Valoi",
     description: "Technology Manager",
-    image: "/speakers/chantel_new.png",
+    image: "/speakers/chantel_new.png", 
   },
 ];

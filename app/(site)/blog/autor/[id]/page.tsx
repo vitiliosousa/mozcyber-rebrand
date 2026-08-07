@@ -34,7 +34,7 @@ export default async function AuthorPage({ params }: Props) {
   });
 
   return (
-    <section className="bg-[#0b0f14] pt-28 pb-20 md:pt-36 md:pb-28">
+    <section className="bg-[#0b0f14] pt-20 pb-12 md:pt-24 md:pb-16">
       <div className="mx-auto max-w-4xl px-6 md:px-10">
         <Link
           href="/blog"
@@ -42,7 +42,7 @@ export default async function AuthorPage({ params }: Props) {
         >
           ← Blog
         </Link>
-        <h1 className="mt-8 text-3xl md:text-5xl">
+        <h1 className="mt-6 text-2xl md:text-4xl">
           {author.name || "Membro Mozcyber"}
         </h1>
         <p className="mt-3 text-moz-muted">
@@ -75,8 +75,7 @@ export default async function AuthorPage({ params }: Props) {
                       {post.title}
                     </h2>
                     <p className="mt-2 text-sm text-white/50">
-                      {readingTimeMinutes(post.content)} min · {post.views}{" "}
-                      views
+                      {readingTimeMinutes(post.content)} min de leitura
                     </p>
                   </div>
                 </div>

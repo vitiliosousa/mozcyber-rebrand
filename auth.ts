@@ -82,26 +82,32 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   callbacks: {
     ...authConfig.callbacks,
     async jwt({ token, user, trigger }) {
-      const t = token as typeof token & { id?: string; role?: Role };
+      const t = token as typeof token & {
+        id?: string;
+        role?: Role;
+        picture?: string | null;
+      };
 
       if (user?.id) {
         const dbUser = await prisma.user.findUnique({
           where: { id: user.id },
-          select: { id: true, role: true },
+          select: { id: true, role: true, image: true },
         });
         t.id = dbUser?.id ?? user.id;
         t.role = dbUser?.role ?? user.role ?? "MEMBER";
+        t.picture = dbUser?.image ?? user.image ?? t.picture;
         return t;
       }
 
       if ((!t.role || trigger === "update") && t.email) {
         const dbUser = await prisma.user.findUnique({
           where: { email: t.email },
-          select: { id: true, role: true },
+          select: { id: true, role: true, image: true },
         });
         if (dbUser) {
           t.id = dbUser.id;
           t.role = dbUser.role;
+          if (dbUser.image) t.picture = dbUser.image;
         }
       }
 
@@ -109,9 +115,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     },
     async session({ session, token }) {
       if (session.user) {
-        const t = token as typeof token & { id?: string; role?: Role };
+        const t = token as typeof token & {
+          id?: string;
+          role?: Role;
+          picture?: string | null;
+        };
         session.user.id = t.id as string;
         session.user.role = t.role || "MEMBER";
+        if (t.picture) session.user.image = t.picture;
       }
       return session;
     },

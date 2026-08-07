@@ -41,35 +41,36 @@ export default async function PostPreviewPage({ params }: Props) {
     session.user.role === "ADMIN";
 
   return (
-    <div>
-      <div className="flex flex-wrap items-start justify-between gap-4">
+    <div className="space-y-6">
+      <div className="flex flex-wrap items-start justify-between gap-4 rounded-xl border border-white/8 bg-[#101820] px-4 py-4 md:px-5">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.35em] text-moz-teal">
+          <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/40">
             Preview
           </p>
-          <h1 className="mt-3 text-3xl md:text-4xl">Pré-visualização</h1>
-          <p className="mt-3 text-sm text-moz-muted">
+          <h1 className="mt-1 text-xl font-semibold md:text-2xl">
+            Pré-visualização
+          </h1>
+          <p className="mt-1.5 text-sm text-white/50">
             Estado:{" "}
             <span className="text-moz-teal">{statusLabel[post.status]}</span>
           </p>
           {(post.status === "DRAFT" || post.status === "REJECTED") && (
-            <p className="mt-2 max-w-lg text-sm text-white/50">
-              Confirma o resultado. Se estiver bom, envia para revisão. Se
-              quiseres alterar, volta a editar.
+            <p className="mt-2 max-w-lg text-sm text-white/40">
+              Confirma o resultado. Se estiver bom, envia para revisão.
             </p>
           )}
         </div>
-        <div className="flex flex-wrap gap-3">
+        <div className="flex flex-wrap gap-2">
           <Link
             href="/dashboard/blog"
-            className="rounded-lg border border-white/20 px-4 py-2 text-sm text-white/80 hover:border-moz-teal hover:text-moz-teal"
+            className="rounded-lg border border-white/12 px-3.5 py-2 text-sm text-white/70 hover:border-moz-teal hover:text-moz-teal"
           >
             Lista
           </Link>
           {canEdit && (
             <Link
               href={`/dashboard/blog/${post.id}/edit`}
-              className="rounded-lg border border-white/20 px-4 py-2 text-sm text-white/80 hover:border-moz-teal hover:text-moz-teal"
+              className="rounded-lg border border-white/12 px-3.5 py-2 text-sm text-white/70 hover:border-moz-teal hover:text-moz-teal"
             >
               Editar
             </Link>
@@ -81,13 +82,13 @@ export default async function PostPreviewPage({ params }: Props) {
                 action={submitForReviewAction.bind(null, post.id)}
                 label="Enviar para revisão"
                 pendingLabel="A enviar…"
-                className="rounded-lg bg-moz-teal px-4 py-2 text-sm font-semibold text-[#0b0f14] hover:bg-white"
+                className="rounded-lg bg-moz-teal px-3.5 py-2 text-sm font-semibold text-[#0b0f14] hover:bg-white"
               />
             )}
           {post.status === "PUBLISHED" && (
             <Link
               href={`/blog/${post.slug}`}
-              className="rounded-lg border border-moz-teal/40 px-4 py-2 text-sm text-moz-teal hover:bg-moz-teal/10"
+              className="rounded-lg border border-moz-teal/35 px-3.5 py-2 text-sm text-moz-teal hover:bg-moz-teal/10"
             >
               Ver no site
             </Link>

@@ -2,110 +2,121 @@ import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 
 export default async function AdminPage() {
-  const [
-    users,
-    pending,
-    published,
-    drafts,
-    totalViews,
-    topPosts,
-    recentAudit,
-  ] = await Promise.all([
-    prisma.user.count(),
-    prisma.post.count({ where: { status: "PENDING", deletedAt: null } }),
-    prisma.post.count({ where: { status: "PUBLISHED", deletedAt: null } }),
-    prisma.post.count({ where: { status: "DRAFT", deletedAt: null } }),
-    prisma.post.aggregate({
-      where: { deletedAt: null },
-      _sum: { views: true },
-    }),
-    prisma.post.findMany({
-      where: { status: "PUBLISHED", deletedAt: null },
-      orderBy: { views: "desc" },
-      take: 5,
-      select: { title: true, slug: true, views: true },
-    }),
-    prisma.auditLog.findMany({
-      orderBy: { createdAt: "desc" },
-      take: 8,
-      include: { actor: { select: { name: true, email: true } } },
-    }),
-  ]);
+  const [users, pending, published, drafts, recentPosts, recentAudit] =
+    await Promise.all([
+      prisma.user.count(),
+      prisma.post.count({ where: { status: "PENDING", deletedAt: null } }),
+      prisma.post.count({ where: { status: "PUBLISHED", deletedAt: null } }),
+      prisma.post.count({ where: { status: "DRAFT", deletedAt: null } }),
+      prisma.post.findMany({
+        where: { status: "PUBLISHED", deletedAt: null },
+        orderBy: { publishedAt: "desc" },
+        take: 5,
+        select: { title: true, slug: true, publishedAt: true },
+      }),
+      prisma.auditLog.findMany({
+        orderBy: { createdAt: "desc" },
+        take: 8,
+        include: { actor: { select: { name: true, email: true } } },
+      }),
+    ]);
+
+  const metrics = [
+    ["Utilizadores", users],
+    ["Pendentes", pending],
+    ["Publicados", published],
+    ["Rascunhos", drafts],
+  ] as const;
 
   return (
-    <div>
-      <h1 className="text-3xl md:text-4xl">Administração</h1>
-      <p className="mt-3 text-moz-muted">Visão geral do site e do blog.</p>
+    <div className="space-y-8">
+      <div className="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-semibold tracking-tight md:text-3xl">
+            Visão geral
+          </h1>
+          <p className="mt-1.5 text-sm text-white/50">
+            Métricas do blog e actividade recente.
+          </p>
+        </div>
+        <Link
+          href="/admin/blog"
+          className="rounded-lg bg-moz-teal px-4 py-2 text-sm font-semibold text-[#0b0f14] hover:bg-white"
+        >
+          Rever artigos
+        </Link>
+      </div>
 
-      <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {[
-          ["Utilizadores", users],
-          ["Pendentes", pending],
-          ["Publicados", published],
-          ["Rascunhos", drafts],
-          ["Views totais", totalViews._sum.views || 0],
-        ].map(([label, value]) => (
-          <div key={String(label)} className="border border-white/10 p-6">
-            <p className="text-xs uppercase tracking-[0.2em] text-moz-muted">
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        {metrics.map(([label, value]) => (
+          <div
+            key={label}
+            className="rounded-xl border border-white/8 bg-[#101820] px-4 py-4"
+          >
+            <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-white/40">
               {label}
             </p>
-            <p className="mt-3 text-3xl text-moz-teal">{value}</p>
+            <p className="mt-2 text-2xl font-semibold tabular-nums text-white">
+              {value}
+            </p>
           </div>
         ))}
       </div>
 
-      <div className="mt-12 grid gap-10 lg:grid-cols-2">
-        <div>
-          <h2 className="text-xl">Mais lidos</h2>
-          <ul className="mt-4 border-t border-white/10">
-            {topPosts.length === 0 && (
-              <li className="py-6 text-sm text-moz-muted">Sem dados.</li>
+      <div className="grid gap-4 lg:grid-cols-2">
+        <section className="overflow-hidden rounded-xl border border-white/8 bg-[#101820]">
+          <div className="border-b border-white/8 px-4 py-3 md:px-5">
+            <h2 className="text-sm font-medium">Publicados recentemente</h2>
+          </div>
+          <ul>
+            {recentPosts.length === 0 && (
+              <li className="px-5 py-8 text-sm text-white/40">Sem dados.</li>
             )}
-            {topPosts.map((p) => (
+            {recentPosts.map((p) => (
               <li
                 key={p.slug}
-                className="flex justify-between gap-4 border-b border-white/10 py-3 text-sm"
+                className="flex items-center justify-between gap-4 border-b border-white/6 px-4 py-3 text-sm last:border-0 md:px-5"
               >
                 <Link
                   href={`/blog/${p.slug}`}
-                  className="text-white/80 hover:text-moz-teal"
+                  className="truncate text-white/80 hover:text-moz-teal"
                 >
                   {p.title}
                 </Link>
-                <span className="text-moz-muted">{p.views}</span>
+                <span className="shrink-0 text-white/40">
+                  {p.publishedAt?.toLocaleDateString("pt-MZ")}
+                </span>
               </li>
             ))}
           </ul>
-        </div>
+        </section>
 
-        <div>
-          <h2 className="text-xl">Actividade recente</h2>
-          <ul className="mt-4 border-t border-white/10">
+        <section className="overflow-hidden rounded-xl border border-white/8 bg-[#101820]">
+          <div className="border-b border-white/8 px-4 py-3 md:px-5">
+            <h2 className="text-sm font-medium">Actividade recente</h2>
+          </div>
+          <ul>
             {recentAudit.length === 0 && (
-              <li className="py-6 text-sm text-moz-muted">Sem registos.</li>
+              <li className="px-5 py-8 text-sm text-white/40">Sem registos.</li>
             )}
             {recentAudit.map((log) => (
-              <li key={log.id} className="border-b border-white/10 py-3 text-sm">
+              <li
+                key={log.id}
+                className="border-b border-white/6 px-4 py-3 text-sm last:border-0 md:px-5"
+              >
                 <p className="text-white/80">
-                  <span className="text-moz-teal">{log.action}</span> ·{" "}
+                  <span className="text-moz-teal">{log.action}</span>
+                  {" · "}
                   {log.actor.name || log.actor.email}
                 </p>
-                <p className="mt-1 text-xs text-white/40">
+                <p className="mt-0.5 text-xs text-white/35">
                   {log.createdAt.toLocaleString("pt-MZ")}
-                  {log.meta ? ` · ${log.meta.slice(0, 80)}` : ""}
                 </p>
               </li>
             ))}
           </ul>
-        </div>
+        </section>
       </div>
-
-      <Link
-        href="/admin/blog"
-        className="mt-8 inline-block text-sm font-semibold text-moz-teal hover:text-white"
-      >
-        Revisão de artigos →
-      </Link>
     </div>
   );
 }

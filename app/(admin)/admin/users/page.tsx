@@ -1,9 +1,32 @@
 import { setUserRoleAction } from "@/lib/actions";
+import PanelListFilters from "@/components/panel/PanelListFilters";
 import ActionButton from "@/components/ui/ActionButton";
 import { prisma } from "@/lib/prisma";
+import type { Prisma, Role } from "@prisma/client";
 
-export default async function AdminUsersPage() {
+type Props = {
+  searchParams: Promise<{ q?: string; role?: string }>;
+};
+
+export default async function AdminUsersPage({ searchParams }: Props) {
+  const sp = await searchParams;
+  const q = (sp.q || "").trim();
+  const role = (sp.role || "").trim() as Role | "";
+
+  const where: Prisma.UserWhereInput = {
+    ...(role ? { role } : {}),
+    ...(q
+      ? {
+          OR: [
+            { name: { contains: q, mode: "insensitive" } },
+            { email: { contains: q, mode: "insensitive" } },
+          ],
+        }
+      : {}),
+  };
+
   const users = await prisma.user.findMany({
+    where,
     orderBy: { createdAt: "desc" },
     select: {
       id: true,
@@ -21,7 +44,31 @@ export default async function AdminUsersPage() {
         Gere papéis de membro e administrador.
       </p>
 
-      <ul className="mt-10 border-t border-white/10">
+      <div className="mt-6">
+        <PanelListFilters
+          basePath="/admin/users"
+          q={q}
+          searchPlaceholder="Pesquisar nome ou email…"
+          selects={[
+            {
+              name: "role",
+              value: role,
+              allLabel: "Todos os papéis",
+              options: [
+                { value: "MEMBER", label: "Membro" },
+                { value: "ADMIN", label: "Admin" },
+              ],
+            },
+          ]}
+        />
+      </div>
+
+      <ul className="mt-6 border-t border-white/10">
+        {users.length === 0 && (
+          <li className="py-10 text-moz-muted">
+            Nenhum utilizador com estes filtros.
+          </li>
+        )}
         {users.map((user) => (
           <li
             key={user.id}

@@ -26,7 +26,7 @@ export default function RegisterForm() {
         </p>
         <h1 className="mt-3 text-3xl md:text-4xl">Criar conta</h1>
         <p className="mt-3 text-sm text-moz-muted">
-          Registo aberto — entra com Google ou email.
+          Para escrever e enviar artigos da comunidade Mozcyber.
         </p>
       </div>
 

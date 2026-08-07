@@ -1,7 +1,7 @@
 "use server";
 
 import { auth, signIn } from "@/auth";
-import { countWords, EXCERPT_MAX_WORDS, publishedWhere } from "@/lib/blog";
+import { countWords, EXCERPT_MAX_WORDS } from "@/lib/blog";
 import { prisma } from "@/lib/prisma";
 import { sanitizeHtml } from "@/lib/sanitize";
 import { isAdminEmail, slugify } from "@/lib/utils";
@@ -476,11 +476,4 @@ export async function markAllNotificationsReadAction() {
     data: { read: true },
   });
   revalidatePath("/dashboard/notifications");
-}
-
-export async function incrementPostViewsAction(id: string) {
-  await prisma.post.updateMany({
-    where: { id, ...publishedWhere },
-    data: { views: { increment: 1 } },
-  });
 }

@@ -45,45 +45,48 @@ export default function Testimonials() {
   }, [index]);
 
   return (
-    <section id="testemunhos" className="bg-[#0b0f14] py-20 md:py-28">
-      <div className="mx-auto max-w-7xl px-6 md:px-10">
+    <section
+      id="testemunhos"
+      className="flex min-h-dvh flex-col justify-center bg-[#0b0f14] py-12 md:min-h-screen md:py-0"
+    >
+      <div className="mx-auto w-full max-w-7xl px-6 md:px-10">
         <Reveal className="max-w-2xl">
           <p className="text-xs font-semibold uppercase tracking-[0.35em] text-moz-teal">
             Comunidade
           </p>
-          <h2 className="mt-4 text-3xl leading-tight md:text-5xl">
+          <h2 className="mt-2 text-2xl leading-tight md:text-4xl">
             O que dizem{" "}
             <span className="font-black text-moz-teal">sobre nós</span>
           </h2>
-          <p className="mt-5 text-base leading-relaxed text-moz-muted">
+          <p className="mt-3 text-sm leading-relaxed text-moz-muted">
             Vozes de quem já participou nos workshops, CTFs e palestras da
             Mozcyber.
           </p>
         </Reveal>
 
-        <div className="mt-12 border-t border-white/15 pt-10 md:mt-16 md:pt-14">
+        <div className="mt-8 border-t border-white/15 pt-8 md:mt-10 md:pt-10">
           <div ref={slideRef} className="max-w-4xl">
-            <blockquote className="text-2xl leading-relaxed text-white md:leading-snug">
+            <blockquote className="text-xl leading-relaxed text-white md:text-2xl md:leading-snug">
               “{item.quote}”
             </blockquote>
-            <footer className="mt-10">
-              <p className="text-lg text-moz-teal">{item.name}</p>
-              <p className="mt-1 text-sm text-moz-muted">{item.designation}</p>
+            <footer className="mt-6 md:mt-8">
+              <p className="text-base text-moz-teal">{item.name}</p>
+              <p className="mt-0.5 text-sm text-moz-muted">{item.designation}</p>
             </footer>
           </div>
 
-          <div className="mt-10 flex items-center justify-between gap-4">
+          <div className="mt-8 flex items-center justify-between gap-4">
             <p className="text-sm text-white/40">
               {String(index + 1).padStart(2, "0")} /{" "}
               {String(testimonials.length).padStart(2, "0")}
             </p>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
               <button
                 type="button"
                 onClick={() => go(-1)}
                 aria-label="Depoimento anterior"
-                className="flex size-11 items-center justify-center rounded-lg border border-white/20 text-white transition-colors hover:border-moz-teal hover:text-moz-teal"
+                className="flex size-9 items-center justify-center rounded-lg border border-white/20 text-white transition-colors hover:border-moz-teal hover:text-moz-teal"
               >
                 ←
               </button>
@@ -91,7 +94,7 @@ export default function Testimonials() {
                 type="button"
                 onClick={() => go(1)}
                 aria-label="Próximo depoimento"
-                className="flex size-11 items-center justify-center rounded-lg border border-white/20 text-white transition-colors hover:border-moz-teal hover:text-moz-teal"
+                className="flex size-9 items-center justify-center rounded-lg border border-white/20 text-white transition-colors hover:border-moz-teal hover:text-moz-teal"
               >
                 →
               </button>

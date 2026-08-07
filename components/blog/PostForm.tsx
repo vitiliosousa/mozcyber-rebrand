@@ -101,20 +101,14 @@ export default function PostForm({
     <form action={formAction} className="writing-desk">
       {post?.id && <input type="hidden" name="id" value={post.id} />}
 
-      <div className="writing-toolbar sticky top-0 z-20 -mx-4 mb-8 flex flex-wrap items-center justify-between gap-3 border-b border-white/10 bg-[#0b0f14]/90 px-4 py-3 backdrop-blur-md md:-mx-8 md:px-8">
-        <div className="flex min-w-0 items-center gap-3">
-          <Link
-            href="/dashboard/blog"
-            className="shrink-0 text-sm text-white/45 transition-colors hover:text-moz-teal"
-          >
-            ← Artigos
-          </Link>
-          {status && (
-            <span className="truncate text-xs uppercase tracking-[0.2em] text-white/35">
-              {statusMessage[status]}
-            </span>
-          )}
-        </div>
+      <div className="mb-8 flex flex-wrap items-center justify-between gap-3">
+        {status ? (
+          <span className="text-xs uppercase tracking-[0.2em] text-white/35">
+            {statusMessage[status]}
+          </span>
+        ) : (
+          <span />
+        )}
 
         {canEdit && (
           <div className="flex flex-wrap items-center gap-2">

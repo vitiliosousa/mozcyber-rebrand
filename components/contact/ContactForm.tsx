@@ -40,35 +40,35 @@ export default function ContactForm() {
   }
 
   return (
-    <section ref={sectionRef} className="bg-[#0b0f14] pb-20 md:pb-28">
+    <section ref={sectionRef} className="bg-[#0b0f14] pb-12 md:pb-16">
       <div className="mx-auto max-w-7xl px-6 md:px-10">
-        <div className="grid gap-14 md:grid-cols-[1fr_1.2fr] md:gap-20">
+        <div className="grid gap-10 md:grid-cols-[1fr_1.2fr] md:gap-14">
           <Reveal variant="slide">
             <p className="text-xs font-semibold uppercase tracking-[0.35em] text-moz-teal">
               Dados
             </p>
-            <h2 className="mt-4 text-3xl leading-tight md:text-5xl">
+            <h2 className="mt-2 text-2xl leading-tight md:text-4xl">
               Outras{" "}
               <span className="font-black text-moz-teal">formas</span>
             </h2>
-            <p className="mt-5 text-base leading-relaxed text-moz-muted">
+            <p className="mt-3 text-sm leading-relaxed text-moz-muted">
               Prefere escrever diretamente? Usa estes canais.
             </p>
 
             <RevealStagger
-              className="mt-10 space-y-8 border-t border-white/10 pt-8"
+              className="mt-6 space-y-5 border-t border-white/10 pt-6"
               selector=":scope li"
               stagger={0.1}
               variant="list"
             >
-              <ul className="space-y-5">
+              <ul className="space-y-4">
                 <li>
                   <p className="text-xs uppercase tracking-[0.2em] text-moz-muted">
                     Email
                   </p>
                   <a
                     href="mailto:mozcyber.community@gmail.com"
-                    className="mt-2 block text-xl transition-colors hover:text-moz-teal"
+                    className="mt-1.5 block text-lg transition-colors hover:text-moz-teal"
                   >
                     mozcyber.community@gmail.com
                   </a>
@@ -77,13 +77,13 @@ export default function ContactForm() {
                   <p className="text-xs uppercase tracking-[0.2em] text-moz-muted">
                     Localização
                   </p>
-                  <p className="mt-2 text-xl">Maputo, Moçambique</p>
+                  <p className="mt-1.5 text-lg">Maputo, Moçambique</p>
                 </li>
                 <li>
                   <p className="text-xs uppercase tracking-[0.2em] text-moz-muted">
                     Redes
                   </p>
-                  <div className="mt-3 flex flex-wrap gap-x-6 gap-y-2 text-base text-white/70">
+                  <div className="mt-2 flex flex-wrap gap-x-5 gap-y-2 text-sm text-white/70">
                     {socialmedia.map((social) => (
                       <a
                         key={social.name}
@@ -105,13 +105,13 @@ export default function ContactForm() {
             <p className="text-xs font-semibold uppercase tracking-[0.35em] text-moz-teal">
               Mensagem
             </p>
-            <h2 className="mt-4 text-3xl leading-tight md:text-5xl">
+            <h2 className="mt-2 text-2xl leading-tight md:text-4xl">
               Envia a tua{" "}
               <span className="font-black text-moz-teal">mensagem</span>
             </h2>
 
             {sent ? (
-              <p className="mt-10 text-lg leading-relaxed text-moz-teal">
+              <p className="mt-6 text-base leading-relaxed text-moz-teal">
                 Obrigado. A tua mensagem foi registada — entraremos em contacto
                 em breve.
               </p>
@@ -119,7 +119,7 @@ export default function ContactForm() {
               <form
                 data-contact="form"
                 onSubmit={handleSubmit}
-                className="mt-10 space-y-8"
+                className="mt-6 space-y-5"
               >
                 <div data-contact="field">
                   <label htmlFor="name" className="sr-only">

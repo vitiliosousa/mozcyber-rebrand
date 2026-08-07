@@ -24,24 +24,24 @@ export default function WhatWeDo() {
   return (
     <section
       id="fazemos"
-      className="bg-moz-teal py-20 text-[#0b0f14] md:py-28"
+      className="flex min-h-dvh flex-col justify-center bg-moz-teal py-12 text-[#0b0f14] md:min-h-screen md:py-0"
     >
-      <div className="mx-auto max-w-7xl px-6 md:px-10">
+      <div className="mx-auto w-full max-w-7xl px-6 md:px-10">
         <Reveal variant="slide" className="max-w-2xl">
           <p className="text-xs font-semibold uppercase tracking-[0.35em] text-[#0b0f14]/55">
             Comunidade
           </p>
-          <h2 className="mt-4 text-3xl leading-tight md:text-5xl">
+          <h2 className="mt-2 text-2xl leading-tight md:text-4xl">
             O que <span className="font-black">fazemos</span>
           </h2>
-          <p className="mt-5 text-base leading-relaxed text-[#0b0f14]/70">
+          <p className="mt-3 text-sm leading-relaxed text-[#0b0f14]/70">
             Formamos e conectamos pessoas em Moçambique através de atividades
             práticas de cibersegurança e literacia digital.
           </p>
         </Reveal>
 
         <RevealStagger
-          className="mt-14 md:mt-16"
+          className="mt-8 md:mt-10"
           selector=":scope li"
           stagger={0.08}
           variant="list"
@@ -50,12 +50,12 @@ export default function WhatWeDo() {
             {activities.map((activity) => (
               <li
                 key={activity.type}
-                className="bg-moz-teal px-6 py-10 md:px-10 md:py-12"
+                className="bg-moz-teal px-5 py-6 md:px-8 md:py-10"
               >
-                <h3 className="text-2xl leading-snug md:text-3xl">
+                <h3 className="text-xl leading-snug md:text-2xl">
                   {activity.type}
                 </h3>
-                <p className="mt-4 max-w-sm text-sm leading-relaxed text-[#0b0f14]/65">
+                <p className="mt-2 max-w-md text-sm leading-relaxed text-[#0b0f14]/65">
                   {activity.desc}
                 </p>
               </li>

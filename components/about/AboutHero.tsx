@@ -8,22 +8,22 @@ const photos = [
   {
     src: "/about/1.jpeg",
     alt: "Membros da comunidade Mozcyber",
-    className: "aspect-[4/5] md:aspect-[3/4]",
+    className: "aspect-[4/5] md:aspect-[4/5]",
   },
   {
     src: "/about/2.jpg",
     alt: "Sessão de workshop prático",
-    className: "aspect-[4/5] md:aspect-[3/4] md:mt-10",
+    className: "aspect-[4/5] md:aspect-[4/5] md:mt-6",
   },
   {
     src: "/about/3.jpg",
     alt: "Equipa a trabalhar em conjunto",
-    className: "aspect-[4/5] md:aspect-[3/4]",
+    className: "aspect-[4/5] md:aspect-[4/5]",
   },
   {
     src: "/about/4.jpg",
     alt: "Momento de formação e partilha",
-    className: "aspect-[4/5] md:aspect-[3/4] md:mt-10",
+    className: "aspect-[4/5] md:aspect-[4/5] md:mt-6",
   },
 ];
 
@@ -34,7 +34,7 @@ export default function AboutHero() {
   return (
     <section
       ref={sectionRef}
-      className="bg-[#0b0f14] pt-28 pb-16 md:pt-36 md:pb-24"
+      className="bg-[#0b0f14] pt-20 pb-10 md:pt-24 md:pb-14"
     >
       <div className="mx-auto max-w-7xl px-6 md:px-10">
         <p
@@ -44,7 +44,7 @@ export default function AboutHero() {
           Sobre nós
         </p>
 
-        <h1 className="mt-4 max-w-4xl text-4xl leading-[1.15] md:text-6xl lg:text-7xl">
+        <h1 className="mt-4 max-w-4xl text-3xl leading-[1.15] md:text-5xl">
           <span className="block overflow-hidden">
             <span data-page="line-inner" className="block">
               Quem somos e
@@ -65,13 +65,13 @@ export default function AboutHero() {
 
         <div
           data-page="rule"
-          className="mt-6 h-px w-16 bg-moz-teal md:mt-8"
+          className="mt-4 h-px w-14 bg-moz-teal md:mt-5"
           aria-hidden
         />
 
         <p
           data-page="desc"
-          className="mt-6 max-w-2xl text-base leading-relaxed text-moz-muted md:mt-8 md:text-xl"
+          className="mt-4 max-w-2xl text-sm leading-relaxed text-moz-muted md:mt-5 md:text-base"
         >
           A Mozcyber é uma comunidade de cibersegurança em Moçambique. Reunimos
           estudantes, profissionais e curiosos para aprender, praticar e
@@ -79,7 +79,7 @@ export default function AboutHero() {
           palestras de literacia digital.
         </p>
 
-        <div className="mt-12 grid grid-cols-2 gap-3 md:mt-16 md:grid-cols-4 md:gap-4">
+        <div className="mt-8 grid grid-cols-2 gap-2 md:mt-10 md:grid-cols-4 md:gap-3">
           {photos.map((photo) => (
             <div
               key={photo.src}
