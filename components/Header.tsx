@@ -10,6 +10,7 @@ const navLinks = [
   { label: "Início", href: "/" },
   { label: "Sobre", href: "/sobre" },
   { label: "Eventos", href: "/eventos" },
+  { label: "Blog", href: "/blog" },
   { label: "Contacto", href: "/contacto" },
 ];
 
@@ -78,8 +79,8 @@ export default function Header() {
           <Image
             src="/Logo.png"
             alt="Mozcyber"
-            width={56}
-            height={56}
+            width={50}
+            height={50}
             className="size-11 md:size-14"
             priority
           />
@@ -102,7 +103,7 @@ export default function Header() {
 
         <div className="flex items-center gap-3">
           <Link
-            href="#entrar"
+            href="/login"
             className="hidden rounded-lg bg-white px-5 py-2 text-sm font-semibold text-black transition-colors hover:bg-moz-teal sm:inline-flex"
           >
             Entrar
@@ -159,7 +160,7 @@ export default function Header() {
             <li className="pt-2">
               <Link
                 data-mobile-link
-                href="#entrar"
+                href="/login"
                 className="block rounded-lg bg-moz-teal px-3 py-3 text-center text-sm font-semibold text-[#0b0f14]"
                 onClick={() => setOpen(false)}
               >

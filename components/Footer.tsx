@@ -11,6 +11,7 @@ const navLinks = [
 
 const pageLinks = [
   { label: "Sobre", href: "/sobre" },
+  { label: "Blog", href: "/blog" },
   { label: "FAQ", href: "/faq" },
   { label: "Contacto", href: "/contacto" },
 ];
