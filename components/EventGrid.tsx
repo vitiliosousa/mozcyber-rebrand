@@ -18,14 +18,14 @@ export default function EventGrid({
           <Link href={event.pageUrl} className="group block">
             <div
               data-reveal="media"
-              className="relative aspect-[16/10] overflow-hidden bg-white/5"
+              className="relative aspect-video overflow-hidden"
             >
               <Image
                 src={event.image}
                 alt={event.alt}
                 fill
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                className="object-contain p-4 transition-transform duration-500 group-hover:scale-105"
+                className="object-cover transition-transform duration-500 group-hover:scale-105"
               />
             </div>
 

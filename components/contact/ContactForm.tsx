@@ -2,6 +2,7 @@
 
 import Reveal from "@/components/animations/Reveal";
 import RevealStagger from "@/components/animations/RevealStagger";
+import { socialmedia } from "@/data/socialmedia";
 import { gsap, prefersReducedMotion, revealEase } from "@/lib/gsap";
 import { useGSAP } from "@gsap/react";
 import { FormEvent, useRef, useState } from "react";
@@ -60,38 +61,40 @@ export default function ContactForm() {
               stagger={0.1}
               variant="list"
             >
-              <ul>
+              <ul className="space-y-5">
                 <li>
                   <p className="text-xs uppercase tracking-[0.2em] text-moz-muted">
                     Email
                   </p>
                   <a
-                    href="mailto:contacto@mozcyber.mz"
-                    className="mt-2 block text-xl transition-colors hover:text-moz-teal md:text-2xl"
+                    href="mailto:mozcyber.community@gmail.com"
+                    className="mt-2 block text-xl transition-colors hover:text-moz-teal"
                   >
-                    contacto@mozcyber.mz
+                    mozcyber.community@gmail.com
                   </a>
                 </li>
                 <li>
                   <p className="text-xs uppercase tracking-[0.2em] text-moz-muted">
                     Localização
                   </p>
-                  <p className="mt-2 text-xl md:text-2xl">Maputo, Moçambique</p>
+                  <p className="mt-2 text-xl">Maputo, Moçambique</p>
                 </li>
                 <li>
                   <p className="text-xs uppercase tracking-[0.2em] text-moz-muted">
                     Redes
                   </p>
                   <div className="mt-3 flex flex-wrap gap-x-6 gap-y-2 text-base text-white/70">
-                    <a href="#" className="transition-colors hover:text-moz-teal">
-                      Instagram
-                    </a>
-                    <a href="#" className="transition-colors hover:text-moz-teal">
-                      LinkedIn
-                    </a>
-                    <a href="#" className="transition-colors hover:text-moz-teal">
-                      X / Twitter
-                    </a>
+                    {socialmedia.map((social) => (
+                      <a
+                        key={social.name}
+                        href={social.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="transition-colors hover:text-moz-teal"
+                      >
+                        {social.name}
+                      </a>
+                    ))}
                   </div>
                 </li>
               </ul>

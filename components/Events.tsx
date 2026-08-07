@@ -5,7 +5,9 @@ import { events } from "@/data/events";
 import { gsap, prefersReducedMotion, revealEase } from "@/lib/gsap";
 import Image from "next/image";
 import Link from "next/link";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+
+const AUTO_MS = 5000;
 
 export default function Events() {
   const preview = events.slice(0, 3);
@@ -39,6 +41,12 @@ export default function Events() {
     });
   }
 
+  useEffect(() => {
+    if (prefersReducedMotion() || preview.length < 2) return;
+    const id = setInterval(() => go(1), AUTO_MS);
+    return () => clearInterval(id);
+  }, [index]);
+
   return (
     <section id="eventos" className="bg-[#0b0f14] py-20 md:py-28">
       <div className="mx-auto max-w-7xl px-6 md:px-10">
@@ -59,13 +67,13 @@ export default function Events() {
         <div className="mt-12 md:mt-16">
           <div ref={slideRef}>
             <Link href={event.pageUrl} className="group block">
-              <div className="relative aspect-[16/9] overflow-hidden bg-white/5 md:aspect-[21/9]">
+              <div className="relative aspect-video overflow-hidden">
                 <Image
                   src={event.image}
                   alt={event.alt}
                   fill
                   sizes="100vw"
-                  className="object-contain p-6 transition-transform duration-700 group-hover:scale-105 md:p-10"
+                  className="object-cover transition-transform duration-700 group-hover:scale-105"
                   priority
                 />
                 <div className="absolute inset-0 bg-linear-to-t from-[#0b0f14] via-[#0b0f14]/50 to-transparent" />

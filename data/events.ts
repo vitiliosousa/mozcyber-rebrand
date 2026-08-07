@@ -17,7 +17,7 @@ export const events: EventItem[] = [
     title: "Um Ciberespaço Seguro e Resiliente em Moçambique",
     place: "Triana Business Lounge",
     desc: "Debate sobre um ciberespaço mais seguro e resiliente em Moçambique.",
-    image: "/events/ciberspacesecurity.png",
+    image: "/events/ciber_space_banner.png",
     alt: "Banner Ciberespaço Seguro",
     pageUrl: "/events/ciberespaco-seguro",
     url: "https://chat.whatsapp.com/LyJ75AMFdSLFox27fkFAHP",

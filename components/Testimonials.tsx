@@ -3,7 +3,9 @@
 import Reveal from "@/components/animations/Reveal";
 import { testimonials } from "@/data/testemonials";
 import { gsap, prefersReducedMotion, revealEase } from "@/lib/gsap";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+
+const AUTO_MS = 5000;
 
 export default function Testimonials() {
   const [index, setIndex] = useState(0);
@@ -36,6 +38,12 @@ export default function Testimonials() {
     });
   }
 
+  useEffect(() => {
+    if (prefersReducedMotion() || testimonials.length < 2) return;
+    const id = setInterval(() => go(1), AUTO_MS);
+    return () => clearInterval(id);
+  }, [index]);
+
   return (
     <section id="testemunhos" className="bg-[#0b0f14] py-20 md:py-28">
       <div className="mx-auto max-w-7xl px-6 md:px-10">
@@ -55,7 +63,7 @@ export default function Testimonials() {
 
         <div className="mt-12 border-t border-white/15 pt-10 md:mt-16 md:pt-14">
           <div ref={slideRef} className="max-w-4xl">
-            <blockquote className="text-2xl leading-relaxed text-white md:text-4xl md:leading-snug">
+            <blockquote className="text-2xl leading-relaxed text-white md:leading-snug">
               “{item.quote}”
             </blockquote>
             <footer className="mt-10">
