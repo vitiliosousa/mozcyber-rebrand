@@ -15,7 +15,9 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Ficheiro em falta." }, { status: 400 });
     }
 
-    const url = await saveUploadedImage(file, "content");
+    const folderRaw = String(formData.get("folder") || "content");
+    const folder = folderRaw === "covers" ? "covers" : "content";
+    const url = await saveUploadedImage(file, folder);
     return NextResponse.json({ url });
   } catch (error) {
     const message =

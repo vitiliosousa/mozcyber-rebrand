@@ -1,15 +1,18 @@
 import PanelShell from "@/components/panel/PanelShell";
 import { auth, signOut } from "@/auth";
+import { prisma } from "@/lib/prisma";
 
 const dashboardLinks = [
   { href: "/dashboard", label: "Início" },
   { href: "/dashboard/blog", label: "Os meus artigos" },
   { href: "/dashboard/blog/new", label: "Novo artigo" },
+  { href: "/dashboard/notifications", label: "Notificações" },
 ];
 
 const adminLinks = [
   { href: "/admin", label: "Visão geral" },
   { href: "/admin/blog", label: "Artigos" },
+  { href: "/admin/blog/trash", label: "Lixeira" },
   { href: "/admin/users", label: "Utilizadores" },
   { href: "/admin/settings", label: "Definições" },
 ];
@@ -27,11 +30,26 @@ export default async function PanelLayout({
   children: React.ReactNode;
 }) {
   const session = await auth();
+  const unread =
+    session?.user?.id && variant === "dashboard"
+      ? await prisma.notification.count({
+          where: { userId: session.user.id, read: false },
+        })
+      : 0;
+
+  const links =
+    variant === "admin"
+      ? adminLinks
+      : dashboardLinks.map((link) =>
+          link.href === "/dashboard/notifications" && unread > 0
+            ? { ...link, label: `Notificações (${unread})` }
+            : link,
+        );
 
   return (
     <PanelShell
       variant={variant}
-      links={variant === "admin" ? adminLinks : dashboardLinks}
+      links={links}
       email={session?.user?.email}
       isAdmin={session?.user?.role === "ADMIN"}
       signOutAction={signOutAction}

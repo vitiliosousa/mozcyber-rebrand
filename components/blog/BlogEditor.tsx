@@ -1,38 +1,41 @@
 "use client";
 
 import Image from "@tiptap/extension-image";
+import Link from "@tiptap/extension-link";
 import Placeholder from "@tiptap/extension-placeholder";
 import { EditorContent, useEditor, useEditorState } from "@tiptap/react";
-import { BubbleMenu, FloatingMenu } from "@tiptap/react/menus";
+import { BubbleMenu } from "@tiptap/react/menus";
 import StarterKit from "@tiptap/starter-kit";
 import { useRef, useState } from "react";
+import { createSlashExtension } from "@/components/blog/slash-command";
 
 type Props = {
   name?: string;
   defaultValue?: string;
 };
 
-function ToolBtn({
+function MarkBtn({
   label,
   active,
   onClick,
-  disabled,
+  italic,
 }: {
   label: string;
   active?: boolean;
   onClick: () => void;
-  disabled?: boolean;
+  italic?: boolean;
 }) {
   return (
     <button
       type="button"
-      disabled={disabled}
       onMouseDown={(e) => e.preventDefault()}
       onClick={onClick}
-      className={`rounded px-2.5 py-1.5 text-xs transition-colors disabled:opacity-50 ${
+      className={`min-w-8 rounded-md px-2 py-1.5 text-sm transition-colors ${
+        italic ? "italic" : "font-semibold"
+      } ${
         active
           ? "bg-moz-teal/20 text-moz-teal"
-          : "text-white/80 hover:bg-white/10 hover:text-white"
+          : "text-white/70 hover:bg-white/10 hover:text-white"
       }`}
     >
       {label}
@@ -47,6 +50,9 @@ export default function BlogEditor({
   const [html, setHtml] = useState(defaultValue || "<p></p>");
   const [uploading, setUploading] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
+  const imageTrigger = useRef(() => {});
+
+  imageTrigger.current = () => fileRef.current?.click();
 
   const editor = useEditor({
     extensions: [
@@ -55,12 +61,21 @@ export default function BlogEditor({
       }),
       Image.configure({
         HTMLAttributes: {
-          class: "rounded-lg max-w-full h-auto my-4",
+          class: "rounded-md max-w-full h-auto my-6",
+        },
+      }),
+      Link.configure({
+        openOnClick: false,
+        HTMLAttributes: {
+          class: "text-moz-teal underline underline-offset-2",
+          rel: "noopener noreferrer",
+          target: "_blank",
         },
       }),
       Placeholder.configure({
-        placeholder: "Escreve o artigo…",
+        placeholder: "Começa a escrever, ou digita / para comandos…",
       }),
+      createSlashExtension(() => imageTrigger.current()),
     ],
     content: defaultValue || "<p></p>",
     immediatelyRender: false,
@@ -68,7 +83,7 @@ export default function BlogEditor({
     editorProps: {
       attributes: {
         class:
-          "blog-editor min-h-72 px-4 py-3 text-base leading-relaxed text-white outline-none",
+          "blog-editor blog-editor--paper min-h-[28rem] text-[1.0625rem] leading-[1.8] text-white/80 outline-none",
       },
     },
   });
@@ -78,26 +93,40 @@ export default function BlogEditor({
     selector: ({ editor: ed }) => {
       if (!ed) {
         return {
-          bulletList: false,
-          orderedList: false,
-          blockquote: false,
           bold: false,
           italic: false,
           h2: false,
           h3: false,
+          link: false,
+          bulletList: false,
+          orderedList: false,
+          blockquote: false,
         };
       }
       return {
-        bulletList: ed.isActive("bulletList"),
-        orderedList: ed.isActive("orderedList"),
-        blockquote: ed.isActive("blockquote"),
         bold: ed.isActive("bold"),
         italic: ed.isActive("italic"),
         h2: ed.isActive("heading", { level: 2 }),
         h3: ed.isActive("heading", { level: 3 }),
+        link: ed.isActive("link"),
+        bulletList: ed.isActive("bulletList"),
+        orderedList: ed.isActive("orderedList"),
+        blockquote: ed.isActive("blockquote"),
       };
     },
   });
+
+  function setLink() {
+    if (!editor) return;
+    const prev = editor.getAttributes("link").href as string | undefined;
+    const url = window.prompt("URL do link", prev || "https://");
+    if (url === null) return;
+    if (url === "") {
+      editor.chain().focus().extendMarkRange("link").unsetLink().run();
+      return;
+    }
+    editor.chain().focus().extendMarkRange("link").setLink({ href: url }).run();
+  }
 
   async function uploadInlineImage(file: File) {
     if (!editor) return;
@@ -120,49 +149,7 @@ export default function BlogEditor({
   }
 
   return (
-    <div className="relative rounded-lg border border-white/15 bg-white/3">
-      <div className="sticky top-0 z-10 flex flex-wrap items-center gap-1 rounded-t-lg border-b border-white/10 bg-[#101820]/95 p-2 backdrop-blur-md">
-        <ToolBtn
-          label="• Lista"
-          active={active?.bulletList}
-          onClick={() => editor?.chain().focus().toggleBulletList().run()}
-        />
-        <ToolBtn
-          label="1. Lista"
-          active={active?.orderedList}
-          onClick={() => editor?.chain().focus().toggleOrderedList().run()}
-        />
-        <ToolBtn
-          label="Citação"
-          active={active?.blockquote}
-          onClick={() => editor?.chain().focus().toggleBlockquote().run()}
-        />
-        <ToolBtn
-          label={uploading ? "A enviar…" : "Imagem"}
-          disabled={!editor || uploading}
-          onClick={() => fileRef.current?.click()}
-        />
-        <span className="mx-1 h-4 w-px bg-white/15" aria-hidden />
-        <ToolBtn
-          label="Desfazer"
-          onClick={() => editor?.chain().focus().undo().run()}
-        />
-        <ToolBtn
-          label="Refazer"
-          onClick={() => editor?.chain().focus().redo().run()}
-        />
-        <input
-          ref={fileRef}
-          type="file"
-          accept="image/jpeg,image/png,image/webp,image/gif"
-          className="hidden"
-          onChange={(e) => {
-            const file = e.target.files?.[0];
-            if (file) void uploadInlineImage(file);
-          }}
-        />
-      </div>
-
+    <div className="relative">
       {editor && (
         <BubbleMenu
           editor={editor}
@@ -170,76 +157,82 @@ export default function BlogEditor({
           options={{
             strategy: "fixed",
             placement: "top",
-            offset: 8,
+            offset: 10,
             flip: true,
             shift: true,
           }}
-          className="z-50 flex gap-1 rounded-lg border border-white/15 bg-[#0b0f14] p-1 shadow-xl"
+          className="z-50 flex items-center gap-0.5 rounded-xl border border-white/15 bg-[#0d1218] p-1 shadow-xl"
         >
-          <ToolBtn
+          <MarkBtn
             label="N"
             active={active?.bold}
             onClick={() => editor.chain().focus().toggleBold().run()}
           />
-          <ToolBtn
+          <MarkBtn
             label="I"
+            italic
             active={active?.italic}
             onClick={() => editor.chain().focus().toggleItalic().run()}
           />
-          <ToolBtn
+          <span className="mx-0.5 h-4 w-px bg-white/15" aria-hidden />
+          <MarkBtn
             label="H2"
             active={active?.h2}
             onClick={() =>
               editor.chain().focus().toggleHeading({ level: 2 }).run()
             }
           />
-          <ToolBtn
+          <MarkBtn
             label="H3"
             active={active?.h3}
             onClick={() =>
               editor.chain().focus().toggleHeading({ level: 3 }).run()
             }
           />
+          <span className="mx-0.5 h-4 w-px bg-white/15" aria-hidden />
+          <MarkBtn
+            label="•"
+            active={active?.bulletList}
+            onClick={() => editor.chain().focus().toggleBulletList().run()}
+          />
+          <MarkBtn
+            label="1."
+            active={active?.orderedList}
+            onClick={() => editor.chain().focus().toggleOrderedList().run()}
+          />
+          <MarkBtn
+            label="“"
+            active={active?.blockquote}
+            onClick={() => editor.chain().focus().toggleBlockquote().run()}
+          />
+          <MarkBtn label="Link" active={active?.link} onClick={setLink} />
+          <MarkBtn
+            label={uploading ? "…" : "Img"}
+            onClick={() => fileRef.current?.click()}
+          />
         </BubbleMenu>
       )}
 
-      {editor && (
-        <FloatingMenu
-          editor={editor}
-          appendTo={() => document.body}
-          options={{
-            strategy: "fixed",
-            placement: "left-start",
-            offset: 8,
-            flip: true,
-            shift: true,
-          }}
-          className="z-50 flex flex-col gap-1 rounded-lg border border-white/15 bg-[#0b0f14] p-1 shadow-xl"
-        >
-          <ToolBtn
-            label="•"
-            onClick={() => editor.chain().focus().toggleBulletList().run()}
-          />
-          <ToolBtn
-            label="1."
-            onClick={() => editor.chain().focus().toggleOrderedList().run()}
-          />
-          <ToolBtn
-            label="H2"
-            onClick={() =>
-              editor.chain().focus().toggleHeading({ level: 2 }).run()
-            }
-          />
-          <ToolBtn
-            label="Img"
-            disabled={uploading}
-            onClick={() => fileRef.current?.click()}
-          />
-        </FloatingMenu>
-      )}
-
       <EditorContent editor={editor} />
+      <p className="mt-8 text-center text-[11px] tracking-wide text-white/30">
+        Selecciona texto para formatar · digita{" "}
+        <kbd className="rounded bg-white/8 px-1.5 py-0.5 font-sans text-white/45">
+          /
+        </kbd>{" "}
+        para blocos
+      </p>
+
       <input type="hidden" name={name} value={html} readOnly />
+      <input
+        ref={fileRef}
+        type="file"
+        accept="image/jpeg,image/png,image/webp,image/gif"
+        className="hidden"
+        onChange={(e) => {
+          const file = e.target.files?.[0];
+          if (file) void uploadInlineImage(file);
+        }}
+      />
     </div>
   );
 }

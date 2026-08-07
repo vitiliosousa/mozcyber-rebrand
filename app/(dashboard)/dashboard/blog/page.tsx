@@ -26,7 +26,7 @@ export default async function DashboardBlogPage({ searchParams }: Props) {
   const { page: pageParam } = await searchParams;
   const page = parsePage(pageParam);
 
-  const where = { authorId: session.user.id };
+  const where = { authorId: session.user.id, deletedAt: null };
   const total = await prisma.post.count({ where });
   const totalPages = Math.max(1, Math.ceil(total / PER_PAGE));
   const safePage = Math.min(page, totalPages);
@@ -69,7 +69,13 @@ export default async function DashboardBlogPage({ searchParams }: Props) {
               <p className="mt-1 text-sm text-white/45">
                 {statusLabel[post.status]} ·{" "}
                 {post.updatedAt.toLocaleDateString("pt-MZ")}
+                {post.status === "PUBLISHED" ? ` · ${post.views} views` : ""}
               </p>
+              {post.status === "REJECTED" && post.rejectionReason && (
+                <p className="mt-2 max-w-md text-sm text-red-300/80">
+                  Motivo: {post.rejectionReason}
+                </p>
+              )}
             </div>
             <div className="flex items-center gap-4 text-sm">
               <Link

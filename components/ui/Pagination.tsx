@@ -4,14 +4,20 @@ type Props = {
   page: number;
   totalPages: number;
   basePath: string;
+  pageParam?: string;
 };
 
-export default function Pagination({ page, totalPages, basePath }: Props) {
+export default function Pagination({
+  page,
+  totalPages,
+  basePath,
+  pageParam = "page",
+}: Props) {
   if (totalPages <= 1) return null;
 
   function href(p: number) {
     const sep = basePath.includes("?") ? "&" : "?";
-    return `${basePath}${sep}page=${p}`;
+    return `${basePath}${sep}${pageParam}=${p}`;
   }
 
   return (

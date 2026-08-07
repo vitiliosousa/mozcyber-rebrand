@@ -1,8 +1,9 @@
 "use server";
 
 import { auth, signIn } from "@/auth";
+import { countWords, EXCERPT_MAX_WORDS, publishedWhere } from "@/lib/blog";
 import { prisma } from "@/lib/prisma";
-import { saveUploadedImage } from "@/lib/upload";
+import { sanitizeHtml } from "@/lib/sanitize";
 import { isAdminEmail, slugify } from "@/lib/utils";
 import bcrypt from "bcryptjs";
 import { AuthError } from "next-auth";
@@ -18,7 +19,12 @@ const registerSchema = z.object({
 
 const postSchema = z.object({
   title: z.string().min(3),
-  excerpt: z.string().min(10),
+  excerpt: z
+    .string()
+    .min(10)
+    .refine((v) => countWords(v) <= EXCERPT_MAX_WORDS, {
+      message: `Resumo: máximo ${EXCERPT_MAX_WORDS} palavras.`,
+    }),
   content: z.string().min(20),
   category: z.string().min(2),
   image: z.string().optional(),
@@ -33,11 +39,7 @@ async function resolveCoverImage(
   formData: FormData,
   previous?: string | null,
 ) {
-  const cover = formData.get("cover");
-  if (cover instanceof File && cover.size > 0) {
-    return saveUploadedImage(cover, "covers");
-  }
-
+  // Capas sobem via /api/upload; o form só envia a URL em `image`.
   const current = String(formData.get("image") || "").trim();
   if (current.startsWith("/uploads/")) return current;
   if (previous?.startsWith("/uploads/") && current === previous) return previous;
@@ -46,6 +48,28 @@ async function resolveCoverImage(
   return current.startsWith("/") || current.startsWith("http")
     ? current
     : previous || null;
+}
+
+async function notify(
+  userId: string,
+  title: string,
+  body: string,
+  href?: string,
+) {
+  await prisma.notification.create({
+    data: { userId, title, body, href },
+  });
+}
+
+async function audit(
+  actorId: string,
+  action: string,
+  postId?: string,
+  meta?: string,
+) {
+  await prisma.auditLog.create({
+    data: { actorId, action, postId, meta },
+  });
 }
 
 export async function registerAction(
@@ -156,7 +180,14 @@ export async function createPostAction(
   });
 
   if (!parsed.success) {
-    return { error: "Preenche título, excerpt, categoria e conteúdo." };
+    const excerptIssue = parsed.error.issues.find((i) =>
+      i.path.includes("excerpt"),
+    );
+    return {
+      error:
+        excerptIssue?.message ||
+        "Preenche título, excerpt, categoria e conteúdo.",
+    };
   }
 
   const slug = await uniqueSlug(parsed.data.title);
@@ -164,11 +195,11 @@ export async function createPostAction(
     data: {
       title: parsed.data.title,
       excerpt: parsed.data.excerpt,
-      content: parsed.data.content,
+      content: sanitizeHtml(parsed.data.content),
       category: parsed.data.category,
       image: coverUrl,
       slug,
-      authorId: user.id,
+      authorId: user.id!,
       status: intent === "submit" ? "PENDING" : "DRAFT",
     },
   });
@@ -186,7 +217,9 @@ export async function updatePostAction(
   const id = String(formData.get("id") || "");
   const intent = String(formData.get("intent") || "draft");
 
-  const post = await prisma.post.findUnique({ where: { id } });
+  const post = await prisma.post.findFirst({
+    where: { id, deletedAt: null },
+  });
   if (!post) return { error: "Artigo não encontrado." };
   if (post.authorId !== user.id && user.role !== "ADMIN") {
     return { error: "Sem permissão." };
@@ -213,7 +246,14 @@ export async function updatePostAction(
   });
 
   if (!parsed.success) {
-    return { error: "Preenche título, excerpt, categoria e conteúdo." };
+    const excerptIssue = parsed.error.issues.find((i) =>
+      i.path.includes("excerpt"),
+    );
+    return {
+      error:
+        excerptIssue?.message ||
+        "Preenche título, excerpt, categoria e conteúdo.",
+    };
   }
 
   const slug =
@@ -236,11 +276,15 @@ export async function updatePostAction(
     data: {
       title: parsed.data.title,
       excerpt: parsed.data.excerpt,
-      content: parsed.data.content,
+      content: sanitizeHtml(parsed.data.content),
       category: parsed.data.category,
       image: coverUrl,
       slug,
       status,
+      rejectionReason:
+        status === "DRAFT" && post.status === "REJECTED"
+          ? null
+          : post.rejectionReason,
     },
   });
 
@@ -253,16 +297,22 @@ export async function updatePostAction(
 
 export async function submitForReviewAction(id: string) {
   const user = await requireUser();
-  const post = await prisma.post.findUnique({ where: { id } });
+  const post = await prisma.post.findFirst({
+    where: { id, deletedAt: null },
+  });
   if (!post) return;
   if (post.authorId !== user.id && user.role !== "ADMIN") return;
-  if (post.status !== "DRAFT" && post.status !== "REJECTED" && user.role !== "ADMIN") {
+  if (
+    post.status !== "DRAFT" &&
+    post.status !== "REJECTED" &&
+    user.role !== "ADMIN"
+  ) {
     return;
   }
 
   await prisma.post.update({
     where: { id },
-    data: { status: "PENDING" },
+    data: { status: "PENDING", rejectionReason: null },
   });
 
   revalidatePath("/dashboard/blog");
@@ -272,33 +322,82 @@ export async function submitForReviewAction(id: string) {
 }
 
 export async function approvePostAction(id: string) {
-  await requireAdmin();
+  const admin = await requireAdmin();
   const post = await prisma.post.update({
     where: { id },
-    data: { status: "PUBLISHED", publishedAt: new Date() },
+    data: {
+      status: "PUBLISHED",
+      publishedAt: new Date(),
+      rejectionReason: null,
+      deletedAt: null,
+    },
   });
+
+  await notify(
+    post.authorId,
+    "Artigo publicado",
+    `"${post.title}" foi aprovado e já está no blog.`,
+    `/blog/${post.slug}`,
+  );
+  await audit(admin.id!, "APPROVE", post.id);
+
   revalidatePath("/admin/blog");
   revalidatePath("/dashboard/blog");
   revalidatePath("/blog");
   revalidatePath(`/blog/${post.slug}`);
 }
 
-export async function rejectPostAction(id: string) {
-  await requireAdmin();
+export async function rejectPostAction(
+  _prev: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
+  const admin = await requireAdmin();
+  const id = String(formData.get("id") || "");
+  const reason = String(formData.get("reason") || "").trim();
+
+  if (reason.length < 5) {
+    return { error: "Indica um motivo de rejeição (mín. 5 caracteres)." };
+  }
+
+  const post = await prisma.post.findFirst({
+    where: { id, deletedAt: null },
+  });
+  if (!post) return { error: "Artigo não encontrado." };
+
   await prisma.post.update({
     where: { id },
-    data: { status: "REJECTED", publishedAt: null },
+    data: { status: "REJECTED", publishedAt: null, rejectionReason: reason },
   });
+
+  await notify(
+    post.authorId,
+    "Artigo rejeitado",
+    `"${post.title}" foi rejeitado: ${reason}`,
+    `/dashboard/blog/${post.id}`,
+  );
+  await audit(admin.id!, "REJECT", post.id, reason);
+
   revalidatePath("/admin/blog");
   revalidatePath("/dashboard/blog");
+  revalidatePath(`/dashboard/blog/${id}`);
+  return { success: "Artigo rejeitado." };
 }
 
 export async function unpublishPostAction(id: string) {
-  await requireAdmin();
+  const admin = await requireAdmin();
   const post = await prisma.post.update({
     where: { id },
     data: { status: "DRAFT", publishedAt: null },
   });
+
+  await notify(
+    post.authorId,
+    "Artigo despublicado",
+    `"${post.title}" foi retirado do blog.`,
+    `/dashboard/blog/${post.id}`,
+  );
+  await audit(admin.id!, "UNPUBLISH", post.id);
+
   revalidatePath("/admin/blog");
   revalidatePath("/dashboard/blog");
   revalidatePath("/blog");
@@ -307,24 +406,81 @@ export async function unpublishPostAction(id: string) {
 
 export async function deletePostAction(id: string) {
   const user = await requireUser();
-  const post = await prisma.post.findUnique({ where: { id } });
+  const post = await prisma.post.findFirst({
+    where: { id, deletedAt: null },
+  });
   if (!post) return;
 
   const isOwner = post.authorId === user.id;
   const isAdmin = user.role === "ADMIN";
-  if (!isAdmin && !(isOwner && post.status !== "PUBLISHED")) {
+  if (!isAdmin && !(isOwner && post.status !== "PUBLISHED" && post.status !== "PENDING")) {
     return;
   }
 
-  await prisma.post.delete({ where: { id } });
+  await prisma.post.update({
+    where: { id },
+    data: { deletedAt: new Date() },
+  });
+  await audit(user.id!, "SOFT_DELETE", post.id);
+
   revalidatePath("/admin/blog");
+  revalidatePath("/admin/blog/trash");
   revalidatePath("/dashboard/blog");
   revalidatePath("/blog");
   if (post.slug) revalidatePath(`/blog/${post.slug}`);
+}
+
+export async function restorePostAction(id: string) {
+  const admin = await requireAdmin();
+  const post = await prisma.post.update({
+    where: { id },
+    data: { deletedAt: null },
+  });
+  await audit(admin.id!, "RESTORE", post.id);
+  revalidatePath("/admin/blog");
+  revalidatePath("/admin/blog/trash");
+  revalidatePath("/dashboard/blog");
+  revalidatePath("/blog");
+}
+
+export async function permanentDeletePostAction(id: string) {
+  const admin = await requireAdmin();
+  const post = await prisma.post.findUnique({ where: { id } });
+  if (!post) return;
+  await prisma.post.delete({ where: { id } });
+  await audit(admin.id!, "HARD_DELETE", id, post.title);
+  revalidatePath("/admin/blog");
+  revalidatePath("/admin/blog/trash");
+  revalidatePath("/blog");
 }
 
 export async function setUserRoleAction(userId: string, role: "MEMBER" | "ADMIN") {
   await requireAdmin();
   await prisma.user.update({ where: { id: userId }, data: { role } });
   revalidatePath("/admin/users");
+}
+
+export async function markNotificationReadAction(id: string) {
+  const user = await requireUser();
+  await prisma.notification.updateMany({
+    where: { id, userId: user.id! },
+    data: { read: true },
+  });
+  revalidatePath("/dashboard/notifications");
+}
+
+export async function markAllNotificationsReadAction() {
+  const user = await requireUser();
+  await prisma.notification.updateMany({
+    where: { userId: user.id!, read: false },
+    data: { read: true },
+  });
+  revalidatePath("/dashboard/notifications");
+}
+
+export async function incrementPostViewsAction(id: string) {
+  await prisma.post.updateMany({
+    where: { id, ...publishedWhere },
+    data: { views: { increment: 1 } },
+  });
 }

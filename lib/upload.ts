@@ -2,6 +2,8 @@ import { randomUUID } from "crypto";
 import { mkdir, writeFile } from "fs/promises";
 import path from "path";
 
+export const MAX_UPLOAD_BYTES = 5 * 1024 * 1024;
+
 const ALLOWED = new Set([
   "image/jpeg",
   "image/png",
@@ -9,7 +11,7 @@ const ALLOWED = new Set([
   "image/gif",
 ]);
 
-const MAX_BYTES = 5 * 1024 * 1024;
+const MAX_BYTES = MAX_UPLOAD_BYTES;
 
 export async function saveUploadedImage(
   file: File | null | undefined,

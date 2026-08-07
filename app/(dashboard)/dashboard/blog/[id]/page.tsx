@@ -2,6 +2,7 @@ import CoverImage from "@/components/blog/CoverImage";
 import ActionButton from "@/components/ui/ActionButton";
 import { auth } from "@/auth";
 import { submitForReviewAction } from "@/lib/actions";
+import { sanitizeHtml } from "@/lib/sanitize";
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
@@ -20,8 +21,8 @@ export default async function PostPreviewPage({ params }: Props) {
   const session = await auth();
   if (!session?.user?.id) redirect("/login");
 
-  const post = await prisma.post.findUnique({
-    where: { id },
+  const post = await prisma.post.findFirst({
+    where: { id, deletedAt: null },
     include: { author: { select: { name: true, email: true } } },
   });
   if (!post) notFound();
@@ -73,14 +74,16 @@ export default async function PostPreviewPage({ params }: Props) {
               Editar
             </Link>
           )}
-          {canSubmit && post.status !== "PENDING" && post.status !== "PUBLISHED" && (
-            <ActionButton
-              action={submitForReviewAction.bind(null, post.id)}
-              label="Enviar para revisão"
-              pendingLabel="A enviar…"
-              className="rounded-lg bg-moz-teal px-4 py-2 text-sm font-semibold text-[#0b0f14] hover:bg-white"
-            />
-          )}
+          {canSubmit &&
+            post.status !== "PENDING" &&
+            post.status !== "PUBLISHED" && (
+              <ActionButton
+                action={submitForReviewAction.bind(null, post.id)}
+                label="Enviar para revisão"
+                pendingLabel="A enviar…"
+                className="rounded-lg bg-moz-teal px-4 py-2 text-sm font-semibold text-[#0b0f14] hover:bg-white"
+              />
+            )}
           {post.status === "PUBLISHED" && (
             <Link
               href={`/blog/${post.slug}`}
@@ -91,6 +94,16 @@ export default async function PostPreviewPage({ params }: Props) {
           )}
         </div>
       </div>
+
+      {post.status === "REJECTED" && post.rejectionReason && (
+        <div className="mt-6 rounded-lg border border-red-400/30 bg-red-400/10 px-4 py-3 text-sm text-red-200">
+          <p className="font-semibold">Motivo da rejeição</p>
+          <p className="mt-1 text-red-100/80">{post.rejectionReason}</p>
+          <p className="mt-2 text-xs text-red-100/60">
+            Edita o artigo e volta a enviar para revisão.
+          </p>
+        </div>
+      )}
 
       {post.status === "PENDING" && (
         <p className="mt-6 rounded-lg border border-moz-teal/30 bg-moz-teal/10 px-4 py-3 text-sm text-moz-teal">
@@ -121,7 +134,7 @@ export default async function PostPreviewPage({ params }: Props) {
 
         <div
           className="blog-article-content mt-10 max-w-3xl text-base leading-relaxed text-white/75"
-          dangerouslySetInnerHTML={{ __html: post.content }}
+          dangerouslySetInnerHTML={{ __html: sanitizeHtml(post.content) }}
         />
       </article>
     </div>

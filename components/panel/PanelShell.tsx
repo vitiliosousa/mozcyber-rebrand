@@ -133,7 +133,7 @@ export default function PanelShell({
           </button>
           <span className="font-black text-moz-teal">Mozcyber</span>
         </header>
-        <main className="mx-auto max-w-5xl px-4 py-8 md:px-8 md:py-10">
+        <main className="mx-auto max-w-5xl px-4 py-8 md:px-8 md:py-10 xl:max-w-6xl">
           {children}
         </main>
       </div>

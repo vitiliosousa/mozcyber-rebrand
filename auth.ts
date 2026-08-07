@@ -22,13 +22,6 @@ declare module "next-auth" {
   }
 }
 
-declare module "@auth/core/jwt" {
-  interface JWT {
-    id?: string;
-    role?: Role;
-  }
-}
-
 const googleEnabled =
   !!process.env.GOOGLE_CLIENT_ID && !!process.env.GOOGLE_CLIENT_SECRET;
 
@@ -89,33 +82,36 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   callbacks: {
     ...authConfig.callbacks,
     async jwt({ token, user, trigger }) {
+      const t = token as typeof token & { id?: string; role?: Role };
+
       if (user?.id) {
         const dbUser = await prisma.user.findUnique({
           where: { id: user.id },
           select: { id: true, role: true },
         });
-        token.id = dbUser?.id ?? user.id;
-        token.role = dbUser?.role ?? user.role ?? "MEMBER";
-        return token;
+        t.id = dbUser?.id ?? user.id;
+        t.role = dbUser?.role ?? user.role ?? "MEMBER";
+        return t;
       }
 
-      if ((!token.role || trigger === "update") && token.email) {
+      if ((!t.role || trigger === "update") && t.email) {
         const dbUser = await prisma.user.findUnique({
-          where: { email: token.email },
+          where: { email: t.email },
           select: { id: true, role: true },
         });
         if (dbUser) {
-          token.id = dbUser.id;
-          token.role = dbUser.role;
+          t.id = dbUser.id;
+          t.role = dbUser.role;
         }
       }
 
-      return token;
+      return t;
     },
     async session({ session, token }) {
       if (session.user) {
-        session.user.id = token.id as string;
-        session.user.role = (token.role as Role) || "MEMBER";
+        const t = token as typeof token & { id?: string; role?: Role };
+        session.user.id = t.id as string;
+        session.user.role = t.role || "MEMBER";
       }
       return session;
     },
