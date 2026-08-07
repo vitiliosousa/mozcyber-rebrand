@@ -1,14 +1,14 @@
 "use client";
 
 import Reveal from "@/components/animations/Reveal";
-import { upcomingEvents } from "@/data/events";
+import { events } from "@/data/events";
 import { gsap, prefersReducedMotion, revealEase } from "@/lib/gsap";
 import Image from "next/image";
 import Link from "next/link";
 import { useRef, useState } from "react";
 
 export default function Events() {
-  const preview = upcomingEvents.slice(0, 3);
+  const preview = events.slice(0, 3);
   const [index, setIndex] = useState(0);
   const slideRef = useRef<HTMLDivElement>(null);
   const event = preview[index];
@@ -58,17 +58,17 @@ export default function Events() {
 
         <div className="mt-12 md:mt-16">
           <div ref={slideRef}>
-            <Link href="/eventos" className="group block">
+            <Link href={event.pageUrl} className="group block">
               <div className="relative aspect-[16/9] overflow-hidden bg-white/5 md:aspect-[21/9]">
                 <Image
                   src={event.image}
                   alt={event.alt}
                   fill
                   sizes="100vw"
-                  className="object-cover transition-transform duration-700 group-hover:scale-105"
+                  className="object-contain p-6 transition-transform duration-700 group-hover:scale-105 md:p-10"
                   priority
                 />
-                <div className="absolute inset-0 bg-linear-to-t from-[#0b0f14] via-[#0b0f14]/40 to-transparent" />
+                <div className="absolute inset-0 bg-linear-to-t from-[#0b0f14] via-[#0b0f14]/50 to-transparent" />
 
                 <div className="absolute inset-x-0 bottom-0 p-6 md:p-10">
                   <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm">

@@ -6,22 +6,22 @@ import { usePageHeroAnimation } from "@/components/animations/usePageHeroAnimati
 
 const photos = [
   {
-    src: "/about/comunidade.jpg",
-    alt: "Membros da comunidade a colaborar",
+    src: "/about/1.jpeg",
+    alt: "Membros da comunidade Mozcyber",
     className: "aspect-[4/5] md:aspect-[3/4]",
   },
   {
-    src: "/about/workshop.jpg",
+    src: "/about/2.jpg",
     alt: "Sessão de workshop prático",
     className: "aspect-[4/5] md:aspect-[3/4] md:mt-10",
   },
   {
-    src: "/about/colaboracao.jpg",
+    src: "/about/3.jpg",
     alt: "Equipa a trabalhar em conjunto",
     className: "aspect-[4/5] md:aspect-[3/4]",
   },
   {
-    src: "/about/formacao.jpg",
+    src: "/about/4.jpg",
     alt: "Momento de formação e partilha",
     className: "aspect-[4/5] md:aspect-[3/4] md:mt-10",
   },
@@ -92,7 +92,7 @@ export default function AboutHero() {
                 fill
                 sizes="(max-width: 768px) 50vw, 25vw"
                 className="object-cover"
-                priority={photo.src.includes("comunidade")}
+                priority={photo.src.includes("1.jpeg")}
               />
             </div>
           ))}

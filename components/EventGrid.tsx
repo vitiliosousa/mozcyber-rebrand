@@ -4,20 +4,18 @@ import Link from "next/link";
 
 type Props = {
   events: EventItem[];
-  href?: string;
   actionLabel?: string;
 };
 
 export default function EventGrid({
   events,
-  href = "/eventos",
   actionLabel = "Ver detalhes →",
 }: Props) {
   return (
     <ul className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 sm:gap-x-6 sm:gap-y-10">
       {events.map((event) => (
         <li key={event.title}>
-          <Link href={href} className="group block">
+          <Link href={event.pageUrl} className="group block">
             <div
               data-reveal="media"
               className="relative aspect-[16/10] overflow-hidden bg-white/5"
@@ -27,7 +25,7 @@ export default function EventGrid({
                 alt={event.alt}
                 fill
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                className="object-cover transition-transform duration-500 group-hover:scale-105"
+                className="object-contain p-4 transition-transform duration-500 group-hover:scale-105"
               />
             </div>
 

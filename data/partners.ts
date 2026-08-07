@@ -20,8 +20,4 @@ export const partners: Partner[] = [
     name: "Bubble",
     logo: "/partners/bubble.png",
   },
-  {
-    name: "Cyber Labs",
-    logo: "/partners/logo_cyber_labs.png",
-  },
 ];

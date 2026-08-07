@@ -1,49 +1,7 @@
 import Reveal from "@/components/animations/Reveal";
 import RevealStagger from "@/components/animations/RevealStagger";
+import { members } from "@/data/team";
 import Image from "next/image";
-
-const team = [
-  {
-    name: "Amina Mussá",
-    role: "Coordenação da comunidade",
-    image: "/team/amina.jpg",
-  },
-  {
-    name: "Carlos Tembe",
-    role: "Workshops & formação",
-    image: "/team/carlos.jpg",
-  },
-  {
-    name: "Fátima Nhantumbo",
-    role: "CTFs & hackathons",
-    image: "/team/fatima.jpg",
-  },
-  {
-    name: "João Mabunda",
-    role: "Literacia digital",
-    image: "/team/joao.jpg",
-  },
-  {
-    name: "Lara Mussá",
-    role: "Coordenação da comunidade",
-    image: "/team/amina.jpg",
-  },
-  {
-    name: "Teresa Tembe",
-    role: "Workshops & formação",
-    image: "/team/carlos.jpg",
-  },
-  {
-    name: "Fernanda Nhantumbo",
-    role: "CTFs & hackathons",
-    image: "/team/fatima.jpg",
-  },
-  {
-    name: "Jonas Mabunda",
-    role: "Literacia digital",
-    image: "/team/joao.jpg",
-  },
-];
 
 export default function Team() {
   return (
@@ -70,7 +28,7 @@ export default function Team() {
           variant="grid"
         >
           <ul className="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 md:gap-x-6 md:gap-y-10 lg:grid-cols-4">
-            {team.map((member) => (
+            {members.map((member) => (
               <li key={member.name} className="group">
                 <div className="relative aspect-square overflow-hidden bg-white/5">
                   <Image
@@ -85,7 +43,7 @@ export default function Team() {
                   {member.name}
                 </h3>
                 <p className="mt-1 text-xs text-moz-teal md:text-sm">
-                  {member.role}
+                  {member.description}
                 </p>
               </li>
             ))}

@@ -1,5 +1,3 @@
-import Footer from "@/components/Footer";
-import Header from "@/components/Header";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
@@ -40,9 +38,7 @@ export default function RootLayout({
         className="min-h-dvh font-[family-name:var(--font-neue-metana)] text-white"
         suppressHydrationWarning
       >
-        <Header />
-        <main>{children}</main>
-        <Footer />
+        {children}
       </body>
     </html>
   );

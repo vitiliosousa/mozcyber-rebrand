@@ -27,11 +27,11 @@ export default function AboutStory() {
           <Reveal variant="clip">
             <div
               data-reveal="media"
-              className="relative aspect-[4/5] overflow-hidden bg-white/5 md:aspect-[3/4]"
+              className="relative aspect-4/5 overflow-hidden bg-white/5 md:aspect-3/4"
             >
               <Image
-                src="/about/formacao.jpg"
-                alt="Sessão de formação da comunidade Mozcyber"
+                src="/about/5.jpg"
+                alt="Sessão da comunidade Mozcyber"
                 fill
                 sizes="(max-width: 768px) 100vw, 50vw"
                 className="object-cover"

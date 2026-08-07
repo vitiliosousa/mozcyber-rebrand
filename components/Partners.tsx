@@ -30,7 +30,7 @@ export default function Partners() {
           stagger={0.07}
           variant="grid"
         >
-          <ul className="grid grid-cols-2 border border-white/10 sm:grid-cols-3 lg:grid-cols-5">
+          <ul className="grid grid-cols-2 border border-white/10 sm:grid-cols-3 lg:grid-cols-4">
             {partners.map((partner) => (
               <li
                 key={partner.name}
