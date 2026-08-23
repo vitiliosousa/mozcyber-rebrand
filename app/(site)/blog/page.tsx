@@ -18,11 +18,11 @@ export const metadata: Metadata = {
 };
 
 type Props = {
-  searchParams: Promise<{ page?: string; q?: string }>;
+  searchParams: Promise<{ page?: string; q?: string; category?: string }>;
 };
 
 export default async function BlogPage({ searchParams }: Props) {
-  const { page, q } = await searchParams;
+  const { page, q, category } = await searchParams;
 
   return (
     <>
@@ -41,7 +41,7 @@ export default async function BlogPage({ searchParams }: Props) {
           Escrever artigo →
         </Link>
       </div>
-      <BlogList page={page} q={q} />
+      <BlogList page={page} q={q} category={category} />
     </>
   );
 }

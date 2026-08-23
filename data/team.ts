@@ -8,51 +8,51 @@ export const members: TeamMember[] = [
   {
     name: "Fabio White",
     description: "Team Lead",
-    image: "/speakers/fabio_new.jpeg",
+    image: "/team/fabio.jpeg",
   },
   {
     name: "Walter Cumbucane",
     description: "Team Co-Lead",
-    image: "/speakers/walter_new.jpeg",
+    image: "/team/walter.jpeg",
   },
   {
     name: "Michelle Chuva",
     description: "Marketing Manager",
-    image: "/speakers/michelle_new.png",
+    image: "/team/michelle.jpg",
   },
   {
     name: "Denzel Mhula",
     description: "Finance Manager",
-    image: "/speakers/denzel.png",
+    image: "/team/denzel.png",
   },
   {
     name: "Muthimbane Langa",
     description: "Community Manager",
-    image: "/speakers/muthimbane_new.png",
+    image: "/team/muthimbane.png",
   },
   {
     name: "Elton Nhaca",
     description: "Community Manager",
-    image: "/speakers/elton_new.png",
+    image: "/team/elton.png",
   },
   {
     name: "Patricio Massinga",
     description: "Business Manager",
-    image: "/speakers/patricio_new.jpeg",
+    image: "/team/patricio.jpeg",
   },
   {
     name: "Vagner Nhachungue",
     description: "Business Manager",
-    image: "/speakers/vagner.jpeg",
+    image: "/team/vagner.jpeg",
   },
   {
     name: "Vitilio Sousa",
     description: "Technology Manager",
-    image: "/speakers/vitilio.png",
+    image: "/team/vitilio.png",
   },
   {
     name: "Chantel Valoi",
     description: "Technology Manager",
-    image: "/speakers/chantel_new.png", 
+    image: "/team/chantel.png", 
   },
 ];
