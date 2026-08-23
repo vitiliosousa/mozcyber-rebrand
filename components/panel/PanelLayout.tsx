@@ -12,6 +12,7 @@ const adminLinks = [
   { href: "/admin", label: "Visão geral" },
   { href: "/admin/blog", label: "Artigos" },
   { href: "/admin/blog/trash", label: "Lixeira" },
+  { href: "/admin/comments", label: "Comentários" },
   { href: "/admin/users", label: "Utilizadores" },
 ];
 
@@ -35,9 +36,18 @@ export default async function PanelLayout({
         })
       : 0;
 
+  const pendingComments =
+    variant === "admin" && session?.user?.role === "ADMIN"
+      ? await prisma.comment.count({ where: { status: "PENDING" } })
+      : 0;
+
   const links =
     variant === "admin"
-      ? adminLinks
+      ? adminLinks.map((link) =>
+          link.href === "/admin/comments" && pendingComments > 0
+            ? { ...link, label: `Comentários (${pendingComments})` }
+            : link,
+        )
       : dashboardLinks.map((link) =>
           link.href === "/dashboard/notifications" && unread > 0
             ? { ...link, label: `Notificações (${unread})` }

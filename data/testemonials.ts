@@ -7,7 +7,7 @@ export const testimonials = [
     },
     {
         quote:
-            "Quero expressar a minha gratidão por tornarem a minha primeira experiência com o evento CTF única  e inesquecível❤️. Aguardo com grande expectativa as proximas iniciativas👾👨🏾‍💻.",
+            "Quero expressar a minha gratidão por tornarem a minha primeira experiência com o evento CTF única  e inesquecível. Aguardo com grande expectativa as proximas iniciativas.",
         name: "Igor Varela",
         designation: "Estudante no IMEP",
     },
@@ -23,5 +23,4 @@ export const testimonials = [
         name: "Chris Cláudio",
         designation: "Estudante na UDM",
     },
-
 ];

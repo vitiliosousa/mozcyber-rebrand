@@ -73,10 +73,12 @@ export default function AboutHero() {
           data-page="desc"
           className="mt-4 max-w-2xl text-sm leading-relaxed text-moz-muted md:mt-5 md:text-base"
         >
-          A Mozcyber é uma comunidade de cibersegurança em Moçambique. Reunimos
-          estudantes, profissionais e curiosos para aprender, praticar e
-          partilhar conhecimento através de workshops, hackathons, CTFs e
-          palestras de literacia digital.
+          A Mozcyber é uma iniciativa de segurança cibernética fundada em
+          Moçambique em 2024, com uma componente corporativa e uma componente
+          comunitária com mais de 600 membros activos. Reunimos estudantes,
+          profissionais e curiosos para aprender, praticar e partilhar
+          conhecimento através de workshops, hackathons, CTFs e palestras de
+          literacia digital.
         </p>
 
         <div className="mt-8 grid grid-cols-2 gap-2 md:mt-10 md:grid-cols-4 md:gap-3">

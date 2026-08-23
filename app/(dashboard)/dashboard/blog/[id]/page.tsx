@@ -1,7 +1,8 @@
-import CoverImage from "@/components/blog/CoverImage";
+import ArticleBody from "@/components/blog/ArticleBody";
 import ActionButton from "@/components/ui/ActionButton";
 import { auth } from "@/auth";
 import { submitForReviewAction } from "@/lib/actions";
+import { readingTimeMinutes } from "@/lib/blog";
 import { sanitizeHtml } from "@/lib/sanitize";
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
@@ -112,31 +113,24 @@ export default async function PostPreviewPage({ params }: Props) {
         </p>
       )}
 
-      <article className="mt-10 border-t border-white/10 pt-10">
-        <p className="text-xs uppercase tracking-[0.2em] text-moz-teal">
-          {post.category}
-        </p>
-        <h2 className="mt-3 text-3xl leading-tight md:text-5xl">{post.title}</h2>
-        <p className="mt-4 text-sm text-moz-muted">
-          {post.author.name || post.author.email} ·{" "}
-          {post.updatedAt.toLocaleDateString("pt-MZ")}
-        </p>
-        <p className="mt-4 max-w-2xl text-base text-white/55">{post.excerpt}</p>
+      <p className="mt-2 max-w-2xl text-sm text-white/40">
+        Assim é que o artigo vai aparecer publicado no blog.
+      </p>
 
-        {post.image && (
-          <div className="relative mt-8 aspect-video max-w-3xl overflow-hidden rounded-lg">
-            <CoverImage
-              src={post.image}
-              alt={post.title}
-              className="object-cover"
-            />
-          </div>
-        )}
-
-        <div
-          className="blog-article-content mt-10 max-w-3xl text-base leading-relaxed text-white/75"
-          dangerouslySetInnerHTML={{ __html: sanitizeHtml(post.content) }}
-        />
+      <article className="-mx-4 mt-6 bg-[#0b0f14] px-4 pt-10 pb-12 md:-mx-5 md:px-10">
+        <div className="mx-auto max-w-3xl">
+          <ArticleBody
+            category={post.category}
+            title={post.title}
+            dateLabel={(post.publishedAt || post.updatedAt).toLocaleDateString(
+              "pt-MZ",
+            )}
+            authorName={post.author.name || "Mozcyber"}
+            minutes={readingTimeMinutes(post.content)}
+            image={post.image}
+            html={sanitizeHtml(post.content)}
+          />
+        </div>
       </article>
     </div>
   );

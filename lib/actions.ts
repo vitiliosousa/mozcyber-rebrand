@@ -17,6 +17,12 @@ const registerSchema = z.object({
   password: z.string().min(6),
 });
 
+const commentSchema = z.object({
+  postId: z.string().min(1),
+  authorName: z.string().min(2, "Nome muito curto.").max(60),
+  body: z.string().min(3, "Comentário muito curto.").max(2000),
+});
+
 const postSchema = z.object({
   title: z.string().min(3),
   excerpt: z
@@ -452,6 +458,81 @@ export async function permanentDeletePostAction(id: string) {
   revalidatePath("/admin/blog");
   revalidatePath("/admin/blog/trash");
   revalidatePath("/blog");
+}
+
+export async function createCommentAction(
+  _prev: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
+  const session = await auth();
+  const postId = String(formData.get("postId") || "");
+
+  const post = await prisma.post.findFirst({
+    where: { id: postId, status: "PUBLISHED", deletedAt: null },
+  });
+  if (!post) return { error: "Artigo não encontrado." };
+
+  const authorName = session?.user?.name
+    ? session.user.name
+    : String(formData.get("authorName") || "").trim();
+
+  const parsed = commentSchema.safeParse({
+    postId,
+    authorName,
+    body: String(formData.get("body") || "").trim(),
+  });
+  if (!parsed.success) {
+    return { error: parsed.error.issues[0]?.message || "Preenche o comentário correctamente." };
+  }
+
+  await prisma.comment.create({
+    data: {
+      postId: parsed.data.postId,
+      authorId: session?.user?.id,
+      authorName: parsed.data.authorName,
+      body: parsed.data.body,
+    },
+  });
+
+  revalidatePath(`/blog/${post.slug}`);
+  revalidatePath("/admin/comments");
+  return { success: "Comentário enviado! Vai aparecer após revisão." };
+}
+
+export async function approveCommentAction(id: string) {
+  await requireAdmin();
+  const comment = await prisma.comment.update({
+    where: { id },
+    data: { status: "APPROVED" },
+    include: { post: { select: { slug: true } } },
+  });
+  revalidatePath("/admin/comments");
+  revalidatePath(`/blog/${comment.post.slug}`);
+}
+
+export async function rejectCommentAction(id: string) {
+  await requireAdmin();
+  const comment = await prisma.comment.update({
+    where: { id },
+    data: { status: "REJECTED" },
+    include: { post: { select: { slug: true } } },
+  });
+  revalidatePath("/admin/comments");
+  revalidatePath(`/blog/${comment.post.slug}`);
+}
+
+export async function deleteCommentAction(id: string) {
+  const user = await requireUser();
+  const comment = await prisma.comment.findUnique({
+    where: { id },
+    include: { post: { select: { slug: true } } },
+  });
+  if (!comment) return;
+  if (comment.authorId !== user.id && user.role !== "ADMIN") return;
+
+  await prisma.comment.delete({ where: { id } });
+  revalidatePath("/admin/comments");
+  revalidatePath(`/blog/${comment.post.slug}`);
 }
 
 export async function setUserRoleAction(userId: string, role: "MEMBER" | "ADMIN") {

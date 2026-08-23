@@ -1,7 +1,7 @@
 import RevealStagger from "@/components/animations/RevealStagger";
 import CoverImage from "@/components/blog/CoverImage";
 import Pagination, { parsePage } from "@/components/ui/Pagination";
-import { publishedWhere, readingTimeMinutes } from "@/lib/blog";
+import { BLOG_CATEGORIES, publishedWhere, readingTimeMinutes } from "@/lib/blog";
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import type { Prisma } from "@prisma/client";
@@ -11,14 +11,21 @@ const PER_PAGE = 9;
 type Props = {
   page?: string;
   q?: string;
+  category?: string;
 };
 
-export default async function BlogList({ page: pageParam, q }: Props) {
+export default async function BlogList({ page: pageParam, q, category }: Props) {
   const page = parsePage(pageParam);
   const query = (q || "").trim();
+  const activeCategory = BLOG_CATEGORIES.includes(
+    (category || "") as (typeof BLOG_CATEGORIES)[number],
+  )
+    ? (category as string)
+    : "";
 
   const where: Prisma.PostWhereInput = {
     ...publishedWhere,
+    ...(activeCategory ? { category: activeCategory } : {}),
     ...(query
       ? {
           OR: [
@@ -44,16 +51,28 @@ export default async function BlogList({ page: pageParam, q }: Props) {
 
   const params = new URLSearchParams();
   if (query) params.set("q", query);
+  if (activeCategory) params.set("category", activeCategory);
   const qs = params.toString();
   const basePath = qs ? `/blog?${qs}` : "/blog";
+
+  function categoryHref(cat: string) {
+    const p = new URLSearchParams();
+    if (query) p.set("q", query);
+    if (cat) p.set("category", cat);
+    const s = p.toString();
+    return s ? `/blog?${s}` : "/blog";
+  }
 
   return (
     <section className="bg-[#0b0f14] pb-12 md:pb-16">
       <div className="mx-auto max-w-7xl px-6 md:px-10">
         <form
           method="get"
-          className="mb-8 flex flex-col gap-3 border-b border-white/10 pb-6 sm:flex-row sm:items-end"
+          className="mb-6 flex flex-col gap-3 border-b border-white/10 pb-6 sm:flex-row sm:items-end"
         >
+          {activeCategory && (
+            <input type="hidden" name="category" value={activeCategory} />
+          )}
           <div className="flex-1">
             <label className="mb-1.5 block text-[11px] uppercase tracking-[0.2em] text-moz-muted">
               Pesquisar
@@ -73,10 +92,36 @@ export default async function BlogList({ page: pageParam, q }: Props) {
           </button>
         </form>
 
+        <div className="mb-8 flex flex-wrap gap-2">
+          <Link
+            href={categoryHref("")}
+            className={`rounded-full border px-3.5 py-1.5 text-xs font-medium transition-colors ${
+              activeCategory === ""
+                ? "border-moz-teal bg-moz-teal text-[#0b0f14]"
+                : "border-white/15 text-white/60 hover:border-moz-teal hover:text-moz-teal"
+            }`}
+          >
+            Todos
+          </Link>
+          {BLOG_CATEGORIES.map((cat) => (
+            <Link
+              key={cat}
+              href={categoryHref(cat)}
+              className={`rounded-full border px-3.5 py-1.5 text-xs font-medium transition-colors ${
+                activeCategory === cat
+                  ? "border-moz-teal bg-moz-teal text-[#0b0f14]"
+                  : "border-white/15 text-white/60 hover:border-moz-teal hover:text-moz-teal"
+              }`}
+            >
+              {cat}
+            </Link>
+          ))}
+        </div>
+
         {posts.length === 0 ? (
           <p className="text-moz-muted">
-            {query
-              ? "Nenhum artigo corresponde à pesquisa."
+            {query || activeCategory
+              ? "Nenhum artigo corresponde aos filtros."
               : "Ainda não há artigos publicados."}
           </p>
         ) : (

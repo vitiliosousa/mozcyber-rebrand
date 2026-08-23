@@ -1,5 +1,8 @@
+import { auth } from "@/auth";
 import Reveal from "@/components/animations/Reveal";
 import CoverImage from "@/components/blog/CoverImage";
+import CommentForm from "@/components/blog/CommentForm";
+import CommentList from "@/components/blog/CommentList";
 import ShareButtons from "@/components/blog/ShareButtons";
 import {
   absoluteUrl,
@@ -66,6 +69,8 @@ export default async function BlogPostPage({ params }: Props) {
   });
   if (!post) notFound();
 
+  const session = await auth();
+
   const related = await prisma.post.findMany({
     where: {
       ...publishedWhere,
@@ -94,9 +99,12 @@ export default async function BlogPostPage({ params }: Props) {
         </Reveal>
 
         <Reveal variant="slide" className="mt-8">
-          <p className="text-xs font-semibold uppercase tracking-[0.35em] text-moz-teal">
+          <Link
+            href={`/blog?category=${encodeURIComponent(post.category)}`}
+            className="text-xs font-semibold uppercase tracking-[0.35em] text-moz-teal hover:text-white"
+          >
             {post.category}
-          </p>
+          </Link>
           <h1 className="mt-3 break-words text-2xl leading-tight md:text-4xl">
             {post.title}
           </h1>
@@ -139,6 +147,12 @@ export default async function BlogPostPage({ params }: Props) {
 
         <Reveal variant="fade" className="relative z-10 mt-10">
           <ShareButtons title={post.title} url={url} />
+        </Reveal>
+
+        <Reveal variant="fade" className="mt-14 border-t border-white/10 pt-8">
+          <h2 className="text-xl">Comentários</h2>
+          <CommentList postId={post.id} />
+          <CommentForm postId={post.id} showNameField={!session?.user} />
         </Reveal>
 
         {related.length > 0 && (
