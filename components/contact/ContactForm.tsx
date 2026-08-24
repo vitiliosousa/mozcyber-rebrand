@@ -64,23 +64,6 @@ export default function ContactForm() {
               <ul className="space-y-4">
                 <li>
                   <p className="text-xs uppercase tracking-[0.2em] text-moz-muted">
-                    Email
-                  </p>
-                  <a
-                    href="mailto:mozcyber.community@gmail.com"
-                    className="mt-1.5 block text-lg transition-colors hover:text-moz-teal"
-                  >
-                    mozcyber.community@gmail.com
-                  </a>
-                </li>
-                <li>
-                  <p className="text-xs uppercase tracking-[0.2em] text-moz-muted">
-                    Localização
-                  </p>
-                  <p className="mt-1.5 text-lg">Maputo, Moçambique</p>
-                </li>
-                <li>
-                  <p className="text-xs uppercase tracking-[0.2em] text-moz-muted">
                     Redes
                   </p>
                   <div className="mt-2 flex flex-wrap gap-x-5 gap-y-2 text-sm text-white/70">
