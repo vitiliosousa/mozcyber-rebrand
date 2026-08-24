@@ -58,8 +58,14 @@ export default function Events() {
               Agenda
             </p>
             <h2 className="mt-2 text-2xl leading-tight md:text-4xl">
-              Próximos{" "}
-              <span className="font-black text-moz-teal">eventos</span>
+              <span className="md:hidden">
+                Últimos{" "}
+                <span className="font-black text-moz-teal">eventos</span>
+              </span>
+              <span className="hidden md:inline">
+                Próximos{" "}
+                <span className="font-black text-moz-teal">eventos</span>
+              </span>
             </h2>
             <p className="mt-3 text-sm leading-relaxed text-moz-muted">
               Workshops, hackathons, CTFs e palestras de literacia digital.
@@ -119,17 +125,6 @@ export default function Events() {
                   className="object-cover transition-transform duration-700 group-hover:scale-105"
                   priority
                 />
-                <div className="absolute inset-0 bg-linear-to-t from-[#0b0f14] via-[#0b0f14]/40 to-transparent" />
-                <div className="absolute inset-x-0 bottom-0 p-4">
-                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs">
-                    <span className="font-semibold uppercase tracking-[0.2em] text-moz-teal">
-                      {event.type}
-                    </span>
-                    <time className="text-white/70">{event.date}</time>
-                  </div>
-                  <h3 className="mt-2 text-xl leading-snug">{event.title}</h3>
-                  <p className="mt-1 text-sm text-white/70">{event.place}</p>
-                </div>
               </div>
             </Link>
           </div>
