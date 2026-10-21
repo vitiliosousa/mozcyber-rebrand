@@ -5,11 +5,11 @@ export type TeamMember = {
 };
 
 export const members: TeamMember[] = [
-  {
+  /*{
     name: "Fabio White",
     description: "Team Lead",
     image: "/team/fabio.jpeg",
-  },
+  },*/
   {
     name: "Walter Cumbucane",
     description: "Team Co-Lead",
